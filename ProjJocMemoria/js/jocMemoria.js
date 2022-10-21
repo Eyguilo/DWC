@@ -22,7 +22,7 @@ class Tablero {
 
         this.arrayTablero = [];
 
-        if((this.filas + this.columnas)%2 == 0){
+        if ((this.filas + this.columnas) % 2 == 0) {
 
             for (let fila = 0; fila < this.filas; fila++) {
                 this.arrayTablero[fila] = [];
@@ -52,12 +52,34 @@ class Tablero {
     }
 }
 
-class Memoria extends Tablero{
+class Memoria extends Tablero {
 
-    constructor(filas,columnas){
+    constructor(filas, columnas) {
         super(filas, columnas);
+        this.colocarElementos();
     }
 
+    colocarElementos() {
+        elementos = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        casillasTablero = this.filas * this.columnas;
+        contadorCasillas = 0;
+
+        while (contadorCasillas < casillasTablero) {
+            posFila = Math.floor(Math.random() * this.filas);
+            posColumna = Math.floor(Math.random() * this.columnas);
+
+            for(i = 0; i < count(elementos); i++){
+
+                if (this.arrayTablero[posFila][posColumna] == '') {
+                    this.arrayTablero[posFila][posColumna] = elementos[i];
+                    contadorCasillas++;
+                }
+
+            }
+
+
+        }
+    }
 }
 
 let memoria1 = new Memoria(numFilas, numColumnas);

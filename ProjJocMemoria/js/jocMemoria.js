@@ -52,10 +52,10 @@ class Tablero {
     }
 }
 
-class Joc extends Tablero{
+class Juego extends Tablero {
 
-    constructor(filas, columnas){
-        super(filas,columnas);
+    constructor(filas, columnas) {
+        super(filas, columnas);
 
         this.colocarElementos();
     }
@@ -64,24 +64,34 @@ class Joc extends Tablero{
 
         let elementos = ["🧡", "😈", "💚", "😳", "💜", "🤎", "🖤", "😊", "🤢", "💩"];
         let casillasTablero = this.filas * this.columnas;
-        let contadorCasillas = 0;
+        let contadorCasillas = 0;   // Asegura que bucle while dure hasta que estén llenos todos los huecos del tablero.
+        let contadorParejas = 0;    // Asegura que se meten de dos en dos los elemetnos.
+        let contadorElementos = 0;  // Permite el aumento del array para cambiar de elemento y a su vez empezar de nuevo el array.
+
 
         while (contadorCasillas < casillasTablero) {
+
+            if (contadorParejas == 2) {
+                contadorParejas = 0;
+                contadorElementos++;
+            }
+            if (contadorElementos == 10) {
+                contadorElementos = 0;
+            }
+
             let posFila = Math.floor(Math.random() * this.filas);
             let posColumna = Math.floor(Math.random() * this.columnas);
 
-            for(let i = 0; i < 2; i++){
+            while (contadorParejas < 2 && this.arrayTablero[posFila][posColumna] == '') {
 
-                for(let j = 0; j < elementos.length; j++){
-                    
-                    this.arrayTablero[posFila][posColumna] = elementos[j];
-                    contadorCasillas++
-                }
-            }            
+                this.arrayTablero[posFila][posColumna] = elementos[contadorElementos];
+                contadorCasillas++;
+                contadorParejas++;
+            }
         }
     }
 }
 
-let joc1 = new Joc(numFilas, numColumnas);
-console.log(joc1.arrayTablero);
-joc1.pintarTablero();
+let juego1 = new Juego(numFilas, numColumnas);
+console.log(juego1.arrayTablero);
+juego1.pintarTablero();

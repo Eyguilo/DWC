@@ -2,7 +2,7 @@ let numFilas = prompt("Introduzca el número de filas:");
 let numColumnas = prompt("Introduzca el número de columnas:");
 
 
-//Asegurar que el tablero cuadre para poder hacer parejas siempre.
+//Asegura que el tablero cuadre para poder hacer parejas siempre.
 while ((numFilas * numColumnas) % 2 != 0) {
     alert("No has introducido un número par de filas y columnas");
     numFilas = prompt("Introduzca de nuevo el número de filas:");
@@ -18,6 +18,7 @@ class Tablero {
         this.crearTablero();
     }
 
+    //Método que crea el array que contendrá los elementos del juego
     crearTablero() {
 
         this.arrayTablero = [];
@@ -31,6 +32,7 @@ class Tablero {
         }
     }
 
+    //Método que muestra en el navegador el array.
     pintarTablero() {
 
         document.write('<table>');
@@ -71,12 +73,12 @@ class Juego extends Tablero {
 
         while (contadorCasillas < casillasTablero) {
 
-            if (contadorParejas == 2) {
-                contadorParejas = 0;
-                contadorElementos++;
+            if (contadorParejas == 2) { // Reinicia el contador de parejas que el siguiente elemento del array
+                contadorParejas = 0;    // solo se coloque dos veces, a su vez aumenta el contador de elementos
+                contadorElementos++;    // para que se coloque el siguiente elemento del array
             }
-            if (contadorElementos == 10) {
-                contadorElementos = 0;
+            if (contadorElementos == 10) { // Reinicia el contador de los elementos para que el array de los 
+                contadorElementos = 0;      // de los elementos empiece a colocar los elementos desde 0 de nuevo.
             }
 
             let posFila = Math.floor(Math.random() * this.filas);

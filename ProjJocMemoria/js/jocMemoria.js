@@ -3,8 +3,8 @@ let numColumnas = prompt("Introduzca el número de columnas:");
 
 
 // Asegura que el tablero cuadre para poder hacer parejas siempre.
-while (((numFilas * numColumnas) % 2 != 0) || ((numFilas * numColumnas) < 3)) {
-    alert("No has introducido un número par de filas y columnas o es solo de una única pareja o has introducido un carácter que no que no es un número.");
+while (((numFilas * numColumnas) % 2 != 0) || ((numFilas * numColumnas) < 3) || ((numFilas * numColumnas) > 256)) {
+    alert("POSIBLES ERRORES:\n- No has introducido un número par de filas y columnas.\n- Es solo de una única pareja.\n- Has introducido un carácter que no es un número.\n- Número máximo de casillas son 256 (16x16).");
     numFilas = prompt("Introduzca de nuevo el número de filas:");
     numColumnas = prompt("Introduzca de nuevo el número de columnas:");
 }

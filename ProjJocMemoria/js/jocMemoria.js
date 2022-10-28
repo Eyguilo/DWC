@@ -67,18 +67,19 @@ class Juego extends Tablero {
         let elementos = ["🧡", "😈", "💚", "😳", "💜", "🤎", "🖤", "😊", "🤢", "💩"];
         let casillasTablero = this.filas * this.columnas;
         let contadorCasillas = 0;   // Asegura que bucle while dure hasta que estén llenos todos los huecos del tablero.
-        let contadorParejas = 0;    // Asegura que se meten de dos en dos los elemetnos.
-        let contadorElementos = 0;  // Permite el aumento del array para cambiar de elemento y a su vez empezar de nuevo el array.
+        let contadorParejas = 0;    // Asegura que se introducen de dos en dos los elemetnos.
+        let contadorElementos = 0;  // Permite el aumento del array para cambiar de elemento una vez ya se ha introducido la pareja
+                                    // y a su vez empezar de nuevo el array.
 
 
         while (contadorCasillas < casillasTablero) {
 
-            if (contadorParejas == 2) { // Reinicia el contador de parejas que el siguiente elemento del array
+            if (contadorParejas == 2) { // Reinicia el contador de parejas y que el siguiente elemento del array
                 contadorParejas = 0;    // solo se coloque dos veces, a su vez aumenta el contador de elementos
                 contadorElementos++;    // para que se coloque el siguiente elemento del array
             }
             if (contadorElementos == 10) { // Reinicia el contador de los elementos para que el array de los 
-                contadorElementos = 0;      // de los elementos empiece a colocar los elementos desde 0 de nuevo.
+                contadorElementos = 0;     // de los elementos empiece a colocar los elementos desde 0 de nuevo.
             }
 
             let posFila = Math.floor(Math.random() * this.filas);

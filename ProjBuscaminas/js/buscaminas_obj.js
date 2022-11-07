@@ -20,24 +20,15 @@ class Tablero {
         }
     }
 
-    pintarTablero() {
-
-        document.write('<table>');
-
-        for (let i = 0; i < this.filas; i++) {
-            document.write('<tr>');
-
-            for (let j = 0; j < this.columnas; j++) {
-                if (this.arrayTablero[i][j] != 0) {
-                    document.write('<td>' + this.arrayTablero[i][j] + '</td>');
-
-                } else {
-                    document.write('<td></td>');
-                }
+    dibujarTableroHTML(numFilas, numColumnas) {
+        let tablero = document.querySelector("#tablero");
+ 
+        for(let i=0; i<numFilas; i++){
+            for(let j=0; j<numColumnas; j++){
+                let td = document.createElement("td");
+                tablero.appendChild(td);
             }
-            document.write('</tr>');
         }
-        document.write('</table>');
     }
 
     //Modificar filas y volver a crear el tablero con las
@@ -106,4 +97,4 @@ class Buscaminas extends Tablero {
 
 let buscaminas1 = new Buscaminas(5, 5, 5);
 console.log(buscaminas1.arrayTablero);
-buscaminas1.pintarTablero();
+buscaminas1.dibujarTableroHTML();

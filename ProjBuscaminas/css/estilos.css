@@ -1,17 +1,20 @@
 table{
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
+    padding: auto;
     text-align: center;
-}
+  }
 
-table, th, td{    
-
-    border-collapse: collapse;
-    border: solid 2px black;
-}
+table,td ,tr{
+    background-color: #BBBBBB;
+    border-left: 2px solid #D3D3D3;
+    border-top: 2px solid #D3D3D3;
+    border-right: 2px solid #A9A9A9;
+    border-bottom: 2px solid #A9A9A9;
+    text-align: center;
+    line-height: var(--size);
+  }
 
 td{
     width: 50px;
     height: 50px;
-}
+    text-align: center;
+  }

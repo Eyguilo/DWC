@@ -22,14 +22,16 @@ class Tablero {
     dibujarTableroDOM() {
 
         let tablero = document.createElement('tablero');
+        let tr;
+        let td;
         document.body.appendChild(tablero);
 
         for (let i = 0; i < this.filas; i++) {
-            let tr = document.createElement('tr');
+            tr = document.createElement('tr');
             tablero.appendChild(tr);
 
             for (let j = 0; j < this.columnas; j++) {
-                let td = document.createElement('td');
+                td = document.createElement('td');
                 tr.appendChild(td);
             }
         }

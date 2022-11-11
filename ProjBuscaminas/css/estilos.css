@@ -1,16 +1,14 @@
-table{
-    padding: auto;
-    text-align: center;
-  }
-
-table,td ,tr{
+table {
+  text-align: center;
+  margin-left: 0 auto;
+  margin-right: 0 auto;
+}
+tr, td{
     background-color: #BBBBBB;
     border-left: 2px solid #D3D3D3;
     border-top: 2px solid #D3D3D3;
     border-right: 2px solid #A9A9A9;
     border-bottom: 2px solid #A9A9A9;
-    text-align: center;
-    line-height: var(--size);
   }
 
 td{

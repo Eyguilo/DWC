@@ -31,7 +31,10 @@ class Tablero {
 
             for (let j = 0; j < this.columnas; j++) {
                 td = document.createElement('td');
+                td.setAttribute("id", `f${i}_c${j}`);
                 tr.appendChild(td);
+                td.dataset.fila=i;
+                td.dataset.columna=j;
             }
         }
 

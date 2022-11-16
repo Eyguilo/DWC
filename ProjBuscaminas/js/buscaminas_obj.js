@@ -24,7 +24,6 @@ class Tablero {
         let tablero = document.createElement('tablero');
         let tr;
         let td;
-        document.body.appendChild(tablero);
 
         for (let i = 0; i < this.filas; i++) {
             tr = document.createElement('tr');
@@ -35,6 +34,8 @@ class Tablero {
                 tr.appendChild(td);
             }
         }
+
+        document.body.appendChild(tablero);
     }
 
     //Modificar filas y volver a crear el tablero con las

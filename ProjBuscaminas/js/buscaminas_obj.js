@@ -19,9 +19,17 @@ class Tablero {
         }
     }
 
+    despejar(){
+        alert("¡Has clicado!");
+    }
+
+    marcar(){
+        alert("¡Has marcado!");
+    }
+
     dibujarTableroDOM() {
 
-        let tablero = document.createElement('tablero');
+        let tablero = document.createElement('table');
         let tr;
         let td;
 
@@ -33,8 +41,12 @@ class Tablero {
                 td = document.createElement('td');
                 td.setAttribute("id", `f${i}_c${j}`);
                 tr.appendChild(td);
+
                 td.dataset.fila=i;
                 td.dataset.columna=j;
+
+                td.addEventListener('click', this.despejar);
+                td.addEventListener('contextmenu', this.marcar);
             }
         }
 

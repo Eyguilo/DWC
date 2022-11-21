@@ -20,11 +20,23 @@ class Tablero {
     }
 
     despejar(){
-        alert("¡Has clicado!");
+        alert("¡Has despejado!");
     }
 
     marcar(){
-        alert("¡Has marcado!");
+        document.oncontextmenu = function(){return false}
+
+        switch (this.getAttribute("style")) {
+            case "background-color:#BBBBBB;":
+                this.setAttribute("class", "bandera;");
+                break;
+            case "bandera":
+                this.setAttribute("class", "interrogante;");
+                break;        
+            default:
+                this.setAttribute("style", "background-color:#BBBBBB;");
+                break;
+        }
     }
 
     dibujarTableroDOM() {
@@ -44,6 +56,7 @@ class Tablero {
 
                 td.dataset.fila=i;
                 td.dataset.columna=j;
+                td.setAttribute("style", "background-color:#BBBBBB;");
 
                 td.addEventListener('click', this.despejar);
                 td.addEventListener('contextmenu', this.marcar);

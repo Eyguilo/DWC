@@ -14,10 +14,20 @@ tr, td{
   border-top: 2px solid #D3D3D3;
   border-right: 2px solid #A9A9A9;
   border-bottom: 2px solid #A9A9A9;
-  }
+}
 
 td{
   width: 50px;
   height: 50px;
   text-align: center;
-  }
+}
+.bandera{
+  background-image: url('imagenes/question-lg.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.interrogante{
+  background-image: url('imagenes/flag-fill.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}

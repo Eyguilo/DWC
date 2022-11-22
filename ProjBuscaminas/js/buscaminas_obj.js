@@ -26,17 +26,18 @@ class Tablero {
     marcar(){
         document.oncontextmenu = function(){return false}
 
-        switch (this.getAttribute("style")) {
-            case "background-color:#BBBBBB;":
-                this.setAttribute("class", "bandera;");
+        switch (this.className) {
+            case "vacio":
+                this.className = "bandera";
                 break;
             case "bandera":
-                this.setAttribute("class", "interrogante;");
-                break;        
+                this.className = "interrogante";
+                break;
             default:
-                this.setAttribute("style", "background-color:#BBBBBB;");
+                this.className = "vacio";
                 break;
         }
+            
     }
 
     dibujarTableroDOM() {
@@ -56,7 +57,7 @@ class Tablero {
 
                 td.dataset.fila=i;
                 td.dataset.columna=j;
-                td.setAttribute("style", "background-color:#BBBBBB;");
+                td.setAttribute("class","vacio");
 
                 td.addEventListener('click', this.despejar);
                 td.addEventListener('contextmenu', this.marcar);

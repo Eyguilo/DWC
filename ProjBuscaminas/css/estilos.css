@@ -23,12 +23,12 @@ td{
 .interrogante{
   background-image: url(../imagenes/question-lg.svg);
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 70%;
   background-position: center;
 }
 .bandera{
   background-image: url(../imagenes/flag-fill.svg);
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 55%;
   background-position: center;
 }

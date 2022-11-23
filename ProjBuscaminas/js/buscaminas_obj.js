@@ -19,54 +19,6 @@ class Tablero {
         }
     }
 
-    despejar(){
-        alert("¡Has despejado!");
-    }
-
-    marcar(){
-        document.oncontextmenu = function(){return false}
-
-        switch (this.className) {
-            case "vacio":
-                this.className = "bandera";
-                break;
-            case "bandera":
-                this.className = "interrogante";
-                break;
-            default:
-                this.className = "vacio";
-                break;
-        }
-            
-    }
-
-    dibujarTableroDOM() {
-
-        let tablero = document.createElement('table');
-        let tr;
-        let td;
-
-        for (let i = 0; i < this.filas; i++) {
-            tr = document.createElement('tr');
-            tablero.appendChild(tr);
-
-            for (let j = 0; j < this.columnas; j++) {
-                td = document.createElement('td');
-                td.setAttribute("id", `f${i}_c${j}`);
-                tr.appendChild(td);
-
-                td.dataset.fila=i;
-                td.dataset.columna=j;
-                td.setAttribute("class","vacio");
-
-                td.addEventListener('click', this.despejar);
-                td.addEventListener('contextmenu', this.marcar);
-            }
-        }
-
-        document.body.appendChild(tablero);
-    }
-
     //Modificar filas y volver a crear el tablero con las
     //filas nuevas
     modificarFilas(nuevasFilas) {
@@ -129,11 +81,72 @@ class Buscaminas extends Tablero {
             }
         }
     }
+
+    dibujarTableroDOM() {
+
+        let tablero = document.createElement('table');
+        let tr;
+        let td;
+
+        for (let i = 0; i < this.filas; i++) {
+            tr = document.createElement('tr');
+            tablero.appendChild(tr);
+
+            for (let j = 0; j < this.columnas; j++) {
+                td = document.createElement('td');
+                td.setAttribute("id", `f${i}_c${j}`);
+                tr.appendChild(td);
+
+                td.dataset.fila=i;
+                td.dataset.columna=j;
+                td.setAttribute("class","vacio");
+
+                td.addEventListener('click', this.despejar);
+                td.addEventListener('contextmenu', this.marcar);
+            }
+        }
+
+        document.body.appendChild(tablero);
+    }
+
+    despejar(){
+
+        for (let i = 0; i < this.fila; i++) {
+        
+            for (let j = 0; j < this.columna; j++) {
+                
+            }
+        }
+
+        this.innerHTML="1";
+
+        if(this.arrayTablero[this.fila][this.columna] == 1){
+            
+        }
+
+    }
+
+    marcar(){
+        document.oncontextmenu = function(){return false}
+
+        switch (this.className) {
+            case "vacio":
+                this.className = "bandera";
+                break;
+            case "bandera":
+                this.className = "interrogante";
+                break;
+            default:
+                this.className = "vacio";
+                break;
+        }
+            
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-    let buscaminas1 = new Buscaminas(5, 5, 5);
+    let buscaminas1 = new Buscaminas(6, 6, 5);
     console.log(buscaminas1.arrayTablero);
     buscaminas1.dibujarTableroDOM();
 });

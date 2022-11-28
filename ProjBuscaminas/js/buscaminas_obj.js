@@ -19,6 +19,27 @@ class Tablero {
         }
     }
 
+    dibujarTableroDOM(){
+        let tabla = document.createElement('table');
+        let fila;
+        let columna;
+
+        for (let i = 0; i < this.filas; i++) {
+            fila = document.createElement('tr');
+            tabla.appendChild(fila);
+
+            for (let j = 0; j < this.columnas; j++) {
+                columna = document.createElement('td');
+                columna.id = `f${i}_c${j}`;
+                columna.dataset.fila = i;
+                columna.dataset.columna = j;
+                fila.appendChild(columna);
+            }
+        }
+
+        document.body.appendChild(tabla);
+    }
+
     //Modificar filas y volver a crear el tablero con las
     //filas nuevas
     modificarFilas(nuevasFilas) {
@@ -82,71 +103,92 @@ class Buscaminas extends Tablero {
         }
     }
 
-    dibujarTableroDOM() {
+    dibujarTableroDOM(){
+        super.dibujarTableroDOM();
 
-        let tablero = document.createElement('table');
-        let tr;
-        let td;
+        let celda;
 
         for (let i = 0; i < this.filas; i++) {
-            tr = document.createElement('tr');
-            tablero.appendChild(tr);
+            for (let j = 0; j < this.columnas; j++){
+                celda = document.getElementById(`f${i}_c${j}`);
 
-            for (let j = 0; j < this.columnas; j++) {
-                td = document.createElement('td');
-                td.setAttribute("id", `f${i}_c${j}`);
-                tr.appendChild(td);
-
-                td.dataset.fila=i;
-                td.dataset.columna=j;
-                td.setAttribute("class","vacio");
-
-                td.addEventListener('click', this.despejar);
-                td.addEventListener('contextmenu', this.marcar);
+                celda.addEventListener('click', this.despejar.bind(this));
+                celda.addEventListener('contextmenu', this.marcar.bind(this));
             }
         }
-
-        document.body.appendChild(tablero);
     }
 
-    despejar(){
+    despejar(elEvento) {
+        let evento = elEvento || window.event;
+        let celda = evento.currentTarget;
+        let fila = celda.dataset.fila;
+        let columna = celda.dataset.columna;
 
-        for (let i = 0; i < this.fila; i++) {
+        if(this.arrayTablero[fila][columna] == 'MINA'){
+            switch (celda.className) {
+                case "":
+                    celda.className = "mina";
+                    break;
+                default:
+                    break;
+            }
+        } else if(this.arrayTablero[fila][columna] != 0){
+            celda.innerHTML = this.arrayTablero[fila][columna];
+            celda.setAttribute("class", "despejar");
+            switch (celda.innerHTML) {
+                case "1":
+                    celda.setAttribute("style", "color: blue;");
+                    break;
+                case "2":
+                    celda.setAttribute("style", "color: green;");
+                    break;
+                case "3":
+                    celda.setAttribute("style", "color: red;");
+                    break;
+                case "4":
+                    celda.setAttribute("style", "color: purple;");
+                    break;
+                case "5":
+                    celda.setAttribute("style", "color: aqua;");
+                    break;
+                case "6":
+                    celda.setAttribute("style", "color: yellow;");
+                    break;
+                case "7":
+                    celda.setAttribute("style", "color: black;");
+                    break;
+                default:
+                    break;
+            }
+        }
         
-            for (let j = 0; j < this.columna; j++) {
-                
-            }
-        }
-
-        this.innerHTML="1";
-
-        if(this.arrayTablero[this.fila][this.columna] == 1){
-            
-        }
-
     }
 
-    marcar(){
-        document.oncontextmenu = function(){return false}
+    marcar(elEvento){
 
-        switch (this.className) {
-            case "vacio":
-                this.className = "bandera";
-                break;
-            case "bandera":
-                this.className = "interrogante";
-                break;
-            default:
-                this.className = "vacio";
-                break;
-        }
-            
+        let evento = elEvento || window.event;
+        let celda = evento.currentTarget;
+
+        document.oncontextmenu = function(){return false}
+    
+        if(celda.className != "despejar"){
+            switch (celda.className) {
+                case "":
+                    celda.className = "bandera";
+                    break;
+                case "bandera":
+                    celda.className = "interrogante";
+                    break;
+                default:
+                    celda.className = "";
+                    break;
+            }
+        }            
     }
 }
 
-document.addEventListener("DOMContentLoaded", function (event) {
-
-    let buscaminas1 = new Buscaminas(6, 6, 5);
-    console.log(buscaminas1.arrayTablero);
+window.onload = function() {
+    var buscaminas1 = new Buscaminas(10, 10, 25);
     buscaminas1.dibujarTableroDOM();
-});
+    console.log(buscaminas1.arrayTablero);
+}

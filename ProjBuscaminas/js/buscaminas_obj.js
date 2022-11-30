@@ -160,6 +160,8 @@ class Buscaminas extends Tablero {
                 default:
                     break;
             }
+        }else{
+            celda.setAttribute("class", "despejar");
         }
         
     }

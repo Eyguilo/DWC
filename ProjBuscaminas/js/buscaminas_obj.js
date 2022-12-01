@@ -162,6 +162,7 @@ class Buscaminas extends Tablero {
             }
         }else{
             celda.setAttribute("class", "despejar");
+            
         }
         
     }

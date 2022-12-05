@@ -19,7 +19,7 @@ class Tablero {
         }
     }
 
-    dibujarTableroDOM(){
+    dibujarTableroDOM() {
         let tabla = document.createElement('table');
         let fila;
         let columna;
@@ -90,9 +90,7 @@ class Buscaminas extends Tablero {
                         if (cFila >= 0 && cFila < this.filas) {
                             for (let cColumna = columna - 1; cColumna < columna + 2; cColumna++) {
                                 if ((cColumna >= 0 && cColumna < this.columnas) && (this.arrayTablero[cFila][cColumna] == 'MINA')) {
-
                                     numMinasAlrededor++;
-
                                 }
                             }
                         }
@@ -103,13 +101,13 @@ class Buscaminas extends Tablero {
         }
     }
 
-    dibujarTableroDOM(){
+    dibujarTableroDOM() {
         super.dibujarTableroDOM();
 
         let celda;
 
         for (let i = 0; i < this.filas; i++) {
-            for (let j = 0; j < this.columnas; j++){
+            for (let j = 0; j < this.columnas; j++) {
                 celda = document.getElementById(`f${i}_c${j}`);
 
                 celda.addEventListener('click', this.despejar.bind(this));
@@ -124,17 +122,20 @@ class Buscaminas extends Tablero {
         let fila = celda.dataset.fila;
         let columna = celda.dataset.columna;
 
-        if(this.arrayTablero[fila][columna] == 'MINA'){
-            switch (celda.className) {
-                case "":
-                    celda.className = "mina";
-                    break;
-                default:
-                    break;
-            }
-        } else if(this.arrayTablero[fila][columna] != 0){
-            celda.innerHTML = this.arrayTablero[fila][columna];
-            celda.setAttribute("class", "despejar");
+        let valorCelda = this.arrayTablero[fila][columna];
+        let esNumero = (valorCelda != 'MINA' && valorCelda != 0);
+        let esBomba = (valorCelda == 'MINA');
+        let bombaSeleccionadaMal;
+
+        let rutaBandera = "../imagenes/flag-fill.svg";
+        
+        let arrayFilas;
+        let arrayColumnas; 
+
+        if (esNumero) {
+            celda.innerHTML = valorCelda;
+            celda.removeEventListener('click', this.despejar.bind(this));
+            celda.removeEventListener('contextmenu', this.marcar.bind(this));
             switch (celda.innerHTML) {
                 case "1":
                     celda.setAttribute("style", "color: blue;");
@@ -160,38 +161,59 @@ class Buscaminas extends Tablero {
                 default:
                     break;
             }
-        }else{
-            celda.setAttribute("class", "despejar");
+
+        } else if (esBomba) {
             
+            arrayFilas = celda.parentNode.parentNode.childNodes;
+            for (let tr of arrayFilas) {
+                arrayColumnas = tr.childNodes;
+                for (let td of arrayColumnas){
+                    td.removeEventListener('click', this.despejar.bind(this));
+                    td.removeEventListener('contextmenu', this.marcar.bind(this));
+
+                    fila = td.dataset.fila;
+                    columna = td.dataset.columna;
+                    valorCelda = this.arrayTablero[fila][columna];
+                    if (td.lastChild != null){
+                        bombaSeleccionadaMal = (td.lastChild.src == rutaBandera && valorCelda != 'MINA');
+                    
+                        if (bombaSeleccionadaMal){
+                            td.lastChild.src = "";
+                            td.style.backgroundColor = 'red';
+                            td.innerHTML = valorCelda;
+                        } else if (valorCelda == 'MINA') {
+                            celda.className = "mina";
+                        }
+                    } else if (valorCelda == 'MINA') {
+                            celda.className = "mina";
+                    }
+                }
+            }
+            alert(`¡HAS PERDIDO!`);
         }
-        
     }
 
     marcar(elEvento){
-
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
-
         document.oncontextmenu = function(){return false}
-    
-        if(celda.className != "despejar"){
-            switch (celda.className) {
-                case "":
-                    celda.className = "bandera";
-                    break;
-                case "bandera":
-                    celda.className = "interrogante";
-                    break;
-                default:
-                    celda.className = "";
-                    break;
-            }
-        }            
+        // Utilizando el elemento img
+        let imagen = document.createElement('img');
+        imagen.style.height = "40px";
+        
+        if (celda.lastChild == null) {
+            imagen.src = "imagenes/flag-fill.svg";
+            celda.appendChild(imagen);
+        } else if (celda.lastChild.src == "/home/horabaixa/Escritorio/DWC/ProjBuscaminas/imagenes/question-lg.svg") {
+            celda.lastChild.src = "imagenes/question-lg.svg";
+        } else if (celda.lastChild.src == "/home/horabaixa/Escritorio/DWC/ProjBuscaminas/imagenes/question-lg.svg") {
+            celda.removeChild(celda.lastChild);
+        }
     }
 }
 
-window.onload = function() {
-    var buscaminas1 = new Buscaminas(10, 10, 25);
+window.onload = function () {
+    var buscaminas1 = new Buscaminas(10, 10, 10);
     buscaminas1.dibujarTableroDOM();
     console.log(buscaminas1.arrayTablero);
 }

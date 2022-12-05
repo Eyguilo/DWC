@@ -6,11 +6,8 @@ table {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  /*background-color: #BBBBBB;
-  border-collapse: collapse;*/
-  border-color: black;
 }
-tr, td, .vacio{
+td{
   background-color: #BBBBBB;
   border-left: 4px solid #D3D3D3;
   border-top: 3px solid #D3D3D3;
@@ -26,13 +23,11 @@ td{
 .interrogante{
   background-image: url(../imagenes/question-lg.svg);
   background-repeat: no-repeat;
-  background-size: 70%;
   background-position: center;
 }
 .bandera{
   background-image: url(../imagenes/flag-fill.svg);
   background-repeat: no-repeat;
-  background-size: 55%;
   background-position: center;
 }
 .mina{
@@ -53,5 +48,4 @@ td{
   border-top: 2px solid #707070;
   border-right: 2px solid #707070;
   border-bottom: 2px solid #707070;
-  font-weight: bolder;
 }

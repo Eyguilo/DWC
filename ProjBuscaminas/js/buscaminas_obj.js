@@ -116,9 +116,8 @@ class Buscaminas extends Tablero {
         }
     }
 
-    despejar(elEvento) {
-        let evento = elEvento || window.event;
-        let celda = evento.currentTarget;
+    despejar(celda) {
+
         let fila = celda.dataset.fila;
         let columna = celda.dataset.columna;
 
@@ -163,7 +162,6 @@ class Buscaminas extends Tablero {
                 default:
                     break;
             }
-
         } else if (esBomba) {
             
             arrayFilas = celda.parentNode.parentNode.childNodes;
@@ -194,6 +192,27 @@ class Buscaminas extends Tablero {
             alert(`¡HAS PERDIDO!`);
         } else{
             celda.className = "vacio";
+
+            
+
+            for (let f = fila -1; f < f +1; f++) {
+                if(f>=0 || f<= this.fila){
+                    for (let c = columna -1; c < c +1; c++) {
+                        if(c>=0 || c<= this.columna){   
+                            if(this.arrayTablero[f][c] == 0 && this.arrayTablero[f][c].className != "vacio") {
+
+                                let celdaComprobar = document.getElementById(`f${f}_c${c}`)
+
+                                console.log(this.arrayTablero[f][c]);
+                                this.despejar(celdaComprobar);
+                            }else{
+                                this.despejar(this.arrayTablero[f][c]);
+                                break;
+                            }
+                        }            
+                    }
+                }
+            }
         }
     }
 
@@ -218,10 +237,17 @@ class Buscaminas extends Tablero {
             }
         }
     }
+
+    despejarEvento(elEvento){
+        let evento = elEvento|| window.event;
+        let celda = evento.currentTarget;
+
+        this.despejar(celda);
+    }
 }
 
 window.onload = function () {
-    var buscaminas1 = new Buscaminas(10, 10, 10);
+    var buscaminas1 = new Buscaminas(5, 5, 2);
     buscaminas1.dibujarTableroDOM();
     console.log(buscaminas1.arrayTablero);
 }

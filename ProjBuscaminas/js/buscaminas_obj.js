@@ -33,6 +33,7 @@ class Tablero {
                 columna.id = `f${i}_c${j}`;
                 columna.dataset.fila = i;
                 columna.dataset.columna = j;
+                columna.dataset.despejado = false;
                 fila.appendChild(columna);
             }
         }
@@ -116,20 +117,30 @@ class Buscaminas extends Tablero {
         }
     }
 
-    despejar(celda) {
+    despejar(elEvento) {
+        let evento = elEvento || window.event;
+        let celda = evento.currentTarget;
 
-        let fila = celda.dataset.fila;
-        let columna = celda.dataset.columna;
+        this.despejarCelda(celda);
+    }
+
+    despejarCelda(celda) {
+
+        let fila = parseInt(celda.dataset.fila);
+        let columna = parseInt(celda.dataset.columna);
+        let estaDespejado = (celda.dataset.despejado = true)
 
         let valorCelda = this.arrayTablero[fila][columna];
         let esNumero = (valorCelda != 'MINA' && valorCelda != 0);
         let esBomba = (valorCelda == 'MINA');
+        let esVacio = (valorCelda == 0)
         let bombaSeleccionadaMal;
 
         let rutaBandera = "../imagenes/flag-fill.svg";
-        
+
         let arrayFilas;
-        let arrayColumnas; 
+        let arrayColumnas;
+        let celdaNueva;
 
         if (esNumero) {
             celda.innerHTML = valorCelda;
@@ -163,21 +174,21 @@ class Buscaminas extends Tablero {
                     break;
             }
         } else if (esBomba) {
-            
+
             arrayFilas = celda.parentNode.parentNode.childNodes;
             for (let tr of arrayFilas) {
                 arrayColumnas = tr.childNodes;
-                for (let td of arrayColumnas){
+                for (let td of arrayColumnas) {
                     td.removeEventListener('click', this.despejar.bind(this));
                     td.removeEventListener('contextmenu', this.marcar.bind(this));
 
                     fila = td.dataset.fila;
                     columna = td.dataset.columna;
                     valorCelda = this.arrayTablero[fila][columna];
-                    if (td.lastChild != null){
+                    if (td.lastChild != null) {
                         bombaSeleccionadaMal = (td.lastChild.src == rutaBandera && valorCelda != 'MINA');
-                    
-                        if (bombaSeleccionadaMal){
+
+                        if (bombaSeleccionadaMal) {
                             td.lastChild.src = "";
                             td.style.backgroundColor = 'red';
                             td.innerHTML = valorCelda;
@@ -185,46 +196,39 @@ class Buscaminas extends Tablero {
                             celda.className = "mina";
                         }
                     } else if (valorCelda == 'MINA') {
-                            celda.className = "mina";
+                        celda.className = "mina";
                     }
                 }
             }
             alert(`¡HAS PERDIDO!`);
-        } else{
+
+        } else if (esVacio) {
             celda.className = "vacio";
+            celda.innerHTML = "";
 
-            
+            for (let cFila = fila - 1; cFila < fila + 1; cFila++) {
+                if (cFila >= 0 || cFila <= this.fila) {
+                    for (let cColumna = columna - 1; cColumna < columna + 1; cColumna++) {
+                        if (cColumna >= 0 || cColumna<= this.columna && !estaDespejado) {
 
-            for (let f = fila -1; f < f +1; f++) {
-                if(f>=0 || f<= this.fila){
-                    for (let c = columna -1; c < c +1; c++) {
-                        if(c>=0 || c<= this.columna){   
-                            if(this.arrayTablero[f][c] == 0 && this.arrayTablero[f][c].className != "vacio") {
-
-                                let celdaComprobar = document.getElementById(`f${f}_c${c}`)
-
-                                console.log(this.arrayTablero[f][c]);
-                                this.despejar(celdaComprobar);
-                            }else{
-                                this.despejar(this.arrayTablero[f][c]);
-                                break;
-                            }
-                        }            
+                            celdaNueva = document.getElementById(`f${cFila}_c${cColumna}`);
+                            console.log(`f${cFila}_c${cColumna}`);
+                        }
                     }
                 }
             }
         }
     }
 
-    marcar(elEvento){
+    marcar(elEvento) {
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
-        document.oncontextmenu = function(){return false};
+        document.oncontextmenu = function () { return false };
         celda.removeEventListener('click', this.despejar.bind(this));
         celda.removeEventListener('contextmenu', this.marcar.bind(this));
 
-        if(celda.className != "vacio"){
-            switch(celda.className){
+        if (celda.className != "vacio") {
+            switch (celda.className) {
                 case "":
                     celda.className = "bandera";
                     break;
@@ -236,13 +240,6 @@ class Buscaminas extends Tablero {
                     break;
             }
         }
-    }
-
-    despejarEvento(elEvento){
-        let evento = elEvento|| window.event;
-        let celda = evento.currentTarget;
-
-        this.despejar(celda);
     }
 }
 

@@ -128,12 +128,16 @@ class Buscaminas extends Tablero {
 
         let fila = parseInt(celda.dataset.fila);
         let columna = parseInt(celda.dataset.columna);
-        let estaDespejado = (celda.dataset.despejado = true)
+
+
+        celda.dataset.despejado = true;
+
 
         let valorCelda = this.arrayTablero[fila][columna];
         let esNumero = (valorCelda != 'MINA' && valorCelda != 0);
         let esBomba = (valorCelda == 'MINA');
-        let esVacio = (valorCelda == 0)
+        let esVacio = (valorCelda == 0);
+        let estaDespejado;
         let bombaSeleccionadaMal;
 
         let rutaBandera = "../imagenes/flag-fill.svg";
@@ -203,16 +207,21 @@ class Buscaminas extends Tablero {
             alert(`¡HAS PERDIDO!`);
 
         } else if (esVacio) {
-            celda.className = "vacio";
-            celda.innerHTML = "";
 
-            for (let cFila = fila - 1; cFila < fila + 1; cFila++) {
-                if (cFila >= 0 || cFila <= this.fila) {
-                    for (let cColumna = columna - 1; cColumna < columna + 1; cColumna++) {
-                        if (cColumna >= 0 || cColumna<= this.columna && !estaDespejado) {
+            celda.className = "vacio";
+
+            for (let cFila = fila - 1; cFila <= fila + 1; cFila++) {
+                if (cFila >= 0 && cFila < this.filas) {
+                    for (let cColumna = columna - 1; cColumna <= columna + 1; cColumna++) {
+                        if (cColumna >= 0 && cColumna < this.columnas) {
 
                             celdaNueva = document.getElementById(`f${cFila}_c${cColumna}`);
-                            console.log(`f${cFila}_c${cColumna}`);
+                            estaDespejado = (celdaNueva.dataset.despejado == "true");
+
+                            if (!estaDespejado) {
+                                console.log(`f${cFila}_c${cColumna}`);
+                                this.despejarCelda(celdaNueva);
+                            }
                         }
                     }
                 }

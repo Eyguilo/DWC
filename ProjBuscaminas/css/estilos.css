@@ -33,10 +33,10 @@ td{
 }
 .mina{
   background-image: url(../imagenes/bomba.png);
+  background-color: #777777;
   background-repeat: no-repeat;
   background-size: 55%;
   background-position: center;
-  background-color: red;
   border-left: 2px solid #707070;
   border-top: 2px solid #707070;
   border-right: 2px solid #707070;

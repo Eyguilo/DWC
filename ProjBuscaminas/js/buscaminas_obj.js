@@ -138,20 +138,16 @@ class Buscaminas extends Tablero {
         let esBomba = (valorCelda == 'MINA');
         let esVacio = (valorCelda == 0);
         let estaDespejado;
-        let bombaSeleccionadaMal;
-
-        let rutaBandera = "../imagenes/flag-fill.svg";
+        let banderaNoBomba;
 
         let arrayFilas;
         let arrayColumnas;
         let celdaNueva;
 
+
         if (esNumero) {
             celda.innerHTML = valorCelda;
-            celda.removeEventListener('click', this.despejar.bind(this));
-            celda.removeEventListener('contextmenu', this.marcar.bind(this));
             celda.className = "vacio";
-
             switch (celda.innerHTML) {
                 case "1":
                     celda.setAttribute("style", "color: blue;");
@@ -177,30 +173,31 @@ class Buscaminas extends Tablero {
                 default:
                     break;
             }
+
         } else if (esBomba) {
 
             arrayFilas = celda.parentNode.parentNode.childNodes;
             for (let tr of arrayFilas) {
                 arrayColumnas = tr.childNodes;
                 for (let td of arrayColumnas) {
-                    td.removeEventListener('click', this.despejar.bind(this));
-                    td.removeEventListener('contextmenu', this.marcar.bind(this));
+                    td.removeEventListener('click', this.despejar);
+                    td.removeEventListener('contextmenu', this.marcar);
 
                     fila = td.dataset.fila;
                     columna = td.dataset.columna;
                     valorCelda = this.arrayTablero[fila][columna];
                     if (td.lastChild != null) {
-                        bombaSeleccionadaMal = (td.lastChild.src == rutaBandera && valorCelda != 'MINA');
-
-                        if (bombaSeleccionadaMal) {
-                            td.lastChild.src = "";
-                            td.style.backgroundColor = 'red';
-                            td.innerHTML = valorCelda;
+                        banderaNoBomba = (celda.className ==  'bandera' && valorCelda != 'MINA');
+                        if (banderaNoBomba) {
+                            celda.innerHTML = valorCelda;
+                            celda.style.backgroundColor = 'red';
                         } else if (valorCelda == 'MINA') {
-                            celda.className = "mina";
+                            celda.className = 'mina';
+                            celda.style.backgroundColor = 'red';
                         }
                     } else if (valorCelda == 'MINA') {
-                        celda.className = "mina";
+                        td.className = 'mina';
+                        celda.style.backgroundColor = 'red';
                     }
                 }
             }
@@ -233,8 +230,16 @@ class Buscaminas extends Tablero {
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
         document.oncontextmenu = function () { return false };
-        celda.removeEventListener('click', this.despejar.bind(this));
-        celda.removeEventListener('contextmenu', this.marcar.bind(this));
+
+        let fila = parseInt(celda.dataset.fila);
+        let columna = parseInt(celda.dataset.columna);
+
+        let valorCelda = this.arrayTablero[fila][columna];
+        let contadorBanderas = 0;
+
+        if(valorCelda == (celda.className = 'bandera')){
+            contadorBanderas++;
+        }
 
         if (celda.className != "vacio") {
             switch (celda.className) {
@@ -250,10 +255,14 @@ class Buscaminas extends Tablero {
             }
         }
     }
+    
+    ganar(){
+
+    }
 }
 
 window.onload = function () {
-    var buscaminas1 = new Buscaminas(5, 5, 2);
+    var buscaminas1 = new Buscaminas(5, 5, 5);
     buscaminas1.dibujarTableroDOM();
     console.log(buscaminas1.arrayTablero);
 }

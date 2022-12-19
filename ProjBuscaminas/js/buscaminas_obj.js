@@ -7,7 +7,7 @@ class Tablero {
     }
 
     crearTablero() {
-
+        // Crear array bidimensional para guardar las minas
         this.arrayTablero = [];
 
         for (let fila = 0; fila < this.filas; fila++) {
@@ -19,7 +19,24 @@ class Tablero {
         }
     }
 
-    dibujarTableroDOM() {
+    dibujarTableroHTML() {
+        // Creamos el tablero en html
+        document.write('<table>');
+
+        for (let i = 0; i < this.filas; i++) {
+            document.write('<tr>');
+
+            for (let j = 0; j < this.columnas; j++) {
+                document.write(`<td></td>`);
+            }
+
+            document.write('</tr>');
+        }
+        document.write('</table>');
+    }
+
+    dibujarTableroDOM(){
+        // Creamos el tablero en DOM
         let tabla = document.createElement('table');
         let fila;
         let columna;
@@ -41,33 +58,43 @@ class Tablero {
         document.body.appendChild(tabla);
     }
 
-    //Modificar filas y volver a crear el tablero con las
-    //filas nuevas
+    
+    
+
     modificarFilas(nuevasFilas) {
+        // Modificar el número de filas y volver a crear el tablero con las filas nuevas
         this.filas = nuevasFilas;
+
         this.crearTablero();
     }
 
-    //Modificar columnas y volver a crear el tablero con las
-    //columnas nuevas
     modificarColumnas(nuevasColumnas) {
+        // Modificar el número de columnas y volver a crear el tablero con las columnas nuevas
         this.columnas = nuevasColumnas;
+
         this.crearTablero();
     }
+
+
 }
 
 class Buscaminas extends Tablero {
     constructor(filas, columnas, numMinas) {
         super(filas, columnas);
         this.numMinas = numMinas;
+        this.numBanderas = 0;
+        this.numCasillasADespejar = filas * columnas - numMinas;
+
         this.colocarMinas();
-        this.colocarNumeros();
+        this.colocarNumMinas();
+        this.dibujarTableroDOM();
     }
 
     colocarMinas() {
         let contadorMinas = 0;
         let posFila;
         let posColumna;
+
 
         while (contadorMinas < this.numMinas) {
             posFila = Math.floor(Math.random() * this.filas);
@@ -76,145 +103,100 @@ class Buscaminas extends Tablero {
             if (this.arrayTablero[posFila][posColumna] != 'MINA') {
                 this.arrayTablero[posFila][posColumna] = 'MINA';
                 contadorMinas++;
-            }
-        }
+            };
+        };
     }
 
-    colocarNumeros() {
+    colocarNumMinas() {
         let numMinasAlrededor;
 
         for (let fila = 0; fila < this.filas; fila++) {
             for (let columna = 0; columna < this.columnas; columna++) {
                 numMinasAlrededor = 0;
                 if (this.arrayTablero[fila][columna] != 'MINA') {
-                    for (let cFila = fila - 1; cFila < fila + 2; cFila++) {
+                    for (let cFila = fila - 1; cFila <= fila + 1; cFila++) {
                         if (cFila >= 0 && cFila < this.filas) {
-                            for (let cColumna = columna - 1; cColumna < columna + 2; cColumna++) {
-                                if ((cColumna >= 0 && cColumna < this.columnas) && (this.arrayTablero[cFila][cColumna] == 'MINA')) {
+                            for (let cColumna = columna - 1; cColumna <= columna + 1; cColumna++) {
+                                if (cColumna >= 0 && cColumna < this.columnas &&
+                                    this.arrayTablero[cFila][cColumna] == 'MINA') {
                                     numMinasAlrededor++;
                                 }
                             }
                         }
+                        this.arrayTablero[fila][columna] = numMinasAlrededor;
                     }
-                    this.arrayTablero[fila][columna] = numMinasAlrededor;
                 }
             }
         }
     }
 
-    dibujarTableroDOM() {
+    dibujarTableroDOM(){
         super.dibujarTableroDOM();
 
         let celda;
 
+        this.despejar = this.despejar.bind(this);
+        this.marcar = this.marcar.bind(this);
+
         for (let i = 0; i < this.filas; i++) {
-            for (let j = 0; j < this.columnas; j++) {
+            for (let j = 0; j < this.columnas; j++){
                 celda = document.getElementById(`f${i}_c${j}`);
 
-                celda.addEventListener('click', this.despejar.bind(this));
-                celda.addEventListener('contextmenu', this.marcar.bind(this));
+                celda.addEventListener('click', this.despejar);
+                celda.addEventListener('contextmenu', this.marcar);
             }
         }
+        console.log(this.arrayTablero);
     }
 
     despejar(elEvento) {
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
-
+        
         this.despejarCelda(celda);
     }
 
     despejarCelda(celda) {
-
         let fila = parseInt(celda.dataset.fila);
         let columna = parseInt(celda.dataset.columna);
 
-
+        // Marcar la celda despejada
         celda.dataset.despejado = true;
+        celda.style.backgroundColor = "lightgrey";
+        celda.removeEventListener('click', this.despejar);
+        celda.removeEventListener('contextmenu', this.marcar);
 
+        // Descontar una casillas pendiente de despejar
+        this.numCasillasADespejar--;
+        console.log(this.numCasillasADespejar);
 
         let valorCelda = this.arrayTablero[fila][columna];
         let esNumero = (valorCelda != 'MINA' && valorCelda != 0);
         let esBomba = (valorCelda == 'MINA');
         let esVacio = (valorCelda == 0);
         let estaDespejado;
-        let banderaNoBomba;
-
-        let arrayFilas;
-        let arrayColumnas;
+        
+    
         let celdaNueva;
-
 
         if (esNumero) {
             celda.innerHTML = valorCelda;
-            celda.className = "vacio";
-            switch (celda.innerHTML) {
-                case "1":
-                    celda.setAttribute("style", "color: blue;");
-                    break;
-                case "2":
-                    celda.setAttribute("style", "color: green;");
-                    break;
-                case "3":
-                    celda.setAttribute("style", "color: red;");
-                    break;
-                case "4":
-                    celda.setAttribute("style", "color: purple;");
-                    break;
-                case "5":
-                    celda.setAttribute("style", "color: aqua;");
-                    break;
-                case "6":
-                    celda.setAttribute("style", "color: yellow;");
-                    break;
-                case "7":
-                    celda.setAttribute("style", "color: black;");
-                    break;
-                default:
-                    break;
-            }
 
+            if (this.numCasillasADespejar == 0) {
+                this.resolverTablero(celda, true);
+            }    
+            
         } else if (esBomba) {
+            this.resolverTablero(celda,false);
 
-            arrayFilas = celda.parentNode.parentNode.childNodes;
-            for (let tr of arrayFilas) {
-                arrayColumnas = tr.childNodes;
-                for (let td of arrayColumnas) {
-                    td.removeEventListener('click', this.despejar);
-                    td.removeEventListener('contextmenu', this.marcar);
-
-                    fila = td.dataset.fila;
-                    columna = td.dataset.columna;
-                    valorCelda = this.arrayTablero[fila][columna];
-                    if (td.lastChild != null) {
-                        banderaNoBomba = (celda.className ==  'bandera' && valorCelda != 'MINA');
-                        if (banderaNoBomba) {
-                            celda.innerHTML = valorCelda;
-                            celda.style.backgroundColor = 'red';
-                        } else if (valorCelda == 'MINA') {
-                            celda.className = 'mina';
-                            celda.style.backgroundColor = 'red';
-                        }
-                    } else if (valorCelda == 'MINA') {
-                        td.className = 'mina';
-                        celda.style.backgroundColor = 'red';
-                    }
-                }
-            }
-            alert(`¡HAS PERDIDO!`);
-
-        } else if (esVacio) {
-
-            celda.className = "vacio";
+        }else if (esVacio) {
 
             for (let cFila = fila - 1; cFila <= fila + 1; cFila++) {
                 if (cFila >= 0 && cFila < this.filas) {
                     for (let cColumna = columna - 1; cColumna <= columna + 1; cColumna++) {
                         if (cColumna >= 0 && cColumna < this.columnas) {
-
-                            celdaNueva = document.getElementById(`f${cFila}_c${cColumna}`);
-                            estaDespejado = (celdaNueva.dataset.despejado == "true");
-
+                            celdaNueva = document.getElementById(`f${cFila}_c${cColumna}`)
+                            estaDespejado = (celdaNueva.dataset.despejado == 'true');
                             if (!estaDespejado) {
                                 console.log(`f${cFila}_c${cColumna}`);
                                 this.despejarCelda(celdaNueva);
@@ -223,46 +205,107 @@ class Buscaminas extends Tablero {
                     }
                 }
             }
+            if (this.numCasillasADespejar == 0) {
+                this.resolverTablero(celda, true);
+            }
         }
+        
     }
 
     marcar(elEvento) {
+        // Capturar el evento y el nodo que lo generó
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
-        document.oncontextmenu = function () { return false };
 
-        let fila = parseInt(celda.dataset.fila);
-        let columna = parseInt(celda.dataset.columna);
+        // Crear el elemento img
+        let imagen = document.createElement('img');
+        imagen.style.height = "35px";
+        imagen.style.marginTop = "5px";
 
-        let valorCelda = this.arrayTablero[fila][columna];
-        let contadorBanderas = 0;
 
-        if(valorCelda == (celda.className = 'bandera')){
-            contadorBanderas++;
+        // Definir las rutas relativas donde se encuentran las imágenes
+        let rutaBandera = 'imagenes/flag-fill.svg';
+        let rutaInterrogante = 'imagenes/question-lg.svg';
+
+        // Definir la ruta relativa de la imagen en la celda seleccionada
+        let rutaImagen;
+
+        // Buscar la ruta relativa de la imagen para la celda seleccionada
+        if (celda.lastChild != null) {
+            rutaImagen = celda.lastChild.src.split('/').slice(-2).join('/');
         }
 
-        if (celda.className != "vacio") {
-            switch (celda.className) {
-                case "":
-                    celda.className = "bandera";
-                    break;
-                case "bandera":
-                    celda.className = "interrogante";
-                    break;
-                default:
-                    celda.className = "";
-                    break;
+        // Comprobar imagen en la celda
+        let noHayImagen = (celda.lastChild == null);
+        let esBandera = (rutaImagen == rutaBandera);
+        let esInterrogante = (rutaImagen == rutaInterrogante);
+
+        // Marcar las celdas con la imagen adecuada
+        if (noHayImagen) {
+            celda.removeEventListener('click', this.despejar);
+            imagen.src = "imagenes/flag-fill.svg";
+            this.numBanderas++;
+            celda.appendChild(imagen);
+            if (this.numBanderas == this.numMinas && this.numCasillasADespejar == 0) {
+                this.resolverTablero(celda, true);
             }
+        } else if (esBandera) {
+            celda.addEventListener('click', this.despejar);
+            celda.lastChild.src = "imagenes/question-lg.svg";
+            this.numBanderas--;
+        } else if (esInterrogante) {
+            celda.removeChild(celda.lastChild);
         }
-    }
-    
-    ganar(){
 
+        console.log(this.numBanderas);            
+    }
+
+    resolverTablero(celda, hasGanado) {
+        let bombaSeleccionadaMal;
+        let rutaBandera = "imagenes/flag-fill.svg";
+        let arrayFilas = celda.parentNode.parentNode.childNodes;
+        let arrayColumnas;
+
+        let fila;
+        let columna;
+        let valorCelda;
+
+
+        for (let tr of arrayFilas) {
+            arrayColumnas = tr.childNodes;
+            for (let td of arrayColumnas){
+                td.removeEventListener('click', this.despejar);
+                td.removeEventListener('contextmenu', this.marcar);
+
+                fila = td.dataset.fila;
+                columna = td.dataset.columna;
+                valorCelda = this.arrayTablero[fila][columna]
+                if (td.lastChild != null){
+                    bombaSeleccionadaMal = (td.lastChild.src ==  rutaBandera && valorCelda != 'MINA');
+                
+                    if (bombaSeleccionadaMal){
+                        td.lastChild.src = "";
+                        td.style.backgroundColor = 'red';
+                        td.innerHTML = valorCelda;
+                        hasGanado = false;
+                    } else if (valorCelda == 'MINA') {
+                        celda.className = "mina";
+                    }
+                } else if (valorCelda == 'MINA') {
+                    celda.className = "mina";
+                    celda.style.backgroundColor = 'red';
+                }
+            }   
+        }
+
+        if (hasGanado) {
+            alert('ENHORABUENA, HAS GANADO');
+        } else {
+            alert('LO SIENTO, HAS PERDIDO');
+        }
     }
 }
 
-window.onload = function () {
-    var buscaminas1 = new Buscaminas(5, 5, 5);
-    buscaminas1.dibujarTableroDOM();
-    console.log(buscaminas1.arrayTablero);
+window.onload = function() {
+    let buscaminas1 = new Buscaminas(5, 5, 5);
 }

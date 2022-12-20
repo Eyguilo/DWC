@@ -292,7 +292,7 @@ class Buscaminas extends Tablero {
                         celda.className = "mina";
                     }
                 } else if (valorCelda == 'MINA') {
-                    celda.className = "mina";
+                    td.className = "mina";
                     celda.style.backgroundColor = 'red';
                 }
             }   

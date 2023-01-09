@@ -18,7 +18,7 @@ class Tablero {
         this.crearTablero();
     }
 
-    //Método que crea el array que contendrá los elementos del juego
+    //Crea el array que contendrá los elementos del juego
     crearTablero() {
 
         this.arrayTablero = [];
@@ -32,26 +32,28 @@ class Tablero {
         }
     }
 
-    //Método que muestra en el navegador el array.
+    //Muestra en el navegador el array.
     pintarTablero() {
-
-        document.write('<table>');
+        let tabla = document.createElement('table');
+        let fila;
+        let columna;
 
         for (let i = 0; i < this.filas; i++) {
-            document.write('<tr>');
+            fila = document.createElement('tr');
+            tabla.appendChild(fila);
 
             for (let j = 0; j < this.columnas; j++) {
-                if (this.arrayTablero[i][j] != 0) {
-                    document.write('<td>' + this.arrayTablero[i][j] + '</td>');
-
-                } else {
-                    document.write('<td></td>');
-                }
+                columna = document.createElement('td');
+                columna.id = `f${i}_c${j}`;
+                columna.dataset.fila = i;
+                columna.dataset.columna = j;
+                columna.dataset.despejado = false;
+                fila.appendChild(columna);
             }
-            document.write('</tr>');
         }
-        document.write('</table>');
+        document.body.appendChild(tabla);
     }
+
 }
 
 class Juego extends Tablero {
@@ -60,6 +62,26 @@ class Juego extends Tablero {
         super(filas, columnas);
 
         this.colocarElementos();
+        this.pintarTablero();
+    }
+
+    pintarTablero(){
+        super.pintarTablero();
+
+        let celda;
+
+        this.despejar = this.despejar.bind(this);
+        this.marcar = this.marcar.bind(this);
+
+        for (let i = 0; i < this.filas; i++) {
+            for (let j = 0; j < this.columnas; j++){
+                celda = document.getElementById(`f${i}_c${j}`);
+
+                celda.addEventListener('click', this.despejar);
+                celda.addEventListener('contextmenu', this.marcar);
+            }
+        }
+        console.log(this.arrayTablero);
     }
 
     colocarElementos() {
@@ -95,6 +117,8 @@ class Juego extends Tablero {
     }
 }
 
-let juego1 = new Juego(numFilas, numColumnas);
-console.log(juego1.arrayTablero);
-juego1.pintarTablero();
+window.onload = function(){
+    let juego1 = new Juego(numFilas, numColumnas);
+    console.log(juego1.arrayTablero);
+    juego1.pintarTablero();    
+}

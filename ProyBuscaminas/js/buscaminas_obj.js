@@ -144,7 +144,6 @@ class Buscaminas extends Tablero {
                 celda.addEventListener('contextmenu', this.marcar);
             }
         }
-        console.log(this.arrayTablero);
     }
 
     despejar(elEvento) {

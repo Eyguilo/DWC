@@ -2,7 +2,6 @@ class Tablero {
     constructor(filas, columnas) {
         this.filas = filas;
         this.columnas = columnas;
-
         this.crearTablero();
     }
 
@@ -54,7 +53,6 @@ class Tablero {
                 fila.appendChild(columna);
             }
         }
-
         document.body.appendChild(tabla);
     }
 
@@ -168,7 +166,7 @@ class Buscaminas extends Tablero {
 
         // Descontar una casillas pendiente de despejar
         this.numCasillasADespejar--;
-        console.log(this.numCasillasADespejar);
+        console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
 
         let valorCelda = this.arrayTablero[fila][columna];
         let esNumero = (valorCelda != 'MINA' && valorCelda != 0);
@@ -213,6 +211,9 @@ class Buscaminas extends Tablero {
     }
 
     marcar(elEvento) {
+
+        document.oncontextmenu = function(){return false}
+
         // Capturar el evento y el nodo que lo generó
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
@@ -257,7 +258,7 @@ class Buscaminas extends Tablero {
             celda.removeChild(celda.lastChild);
         }
 
-        console.log(this.numBanderas);            
+        console.log("Número de banderas colocadas " + this.numBanderas + ".");            
     }
 
     resolverTablero(celda, hasGanado) {
@@ -307,5 +308,5 @@ class Buscaminas extends Tablero {
 }
 
 window.onload = function() {
-    let buscaminas1 = new Buscaminas(5, 5, 5);
+    let buscaminas1 = new Buscaminas(5, 5, 1);
 }

@@ -1,3 +1,7 @@
+*{
+    margin: 0;
+    padding: 0;
+}
 h1{
     text-align: center;
 }
@@ -13,5 +17,6 @@ td{
     height: 50px;         
     border: solid 3px black;
     font-size: 40px;
+    background-color: mediumslateblue;
 }
 

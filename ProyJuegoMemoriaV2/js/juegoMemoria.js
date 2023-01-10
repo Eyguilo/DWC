@@ -53,7 +53,6 @@ class Tablero {
         }
         document.body.appendChild(tabla);
     }
-
 }
 
 class Juego extends Tablero {
@@ -115,10 +114,75 @@ class Juego extends Tablero {
             }
         }
     }
+
+    despejar(elEvento) {
+        let evento = elEvento || window.event;
+        let celda = evento.currentTarget;
+        
+        this.despejarCelda(celda);
+    }
+
+    despejarCelda(celda) {
+        let fila = parseInt(celda.dataset.fila);
+        let columna = parseInt(celda.dataset.columna);
+
+        // Marcar la celda despejada
+        celda.dataset.despejado = true;
+        celda.style.backgroundColor = "lightgrey";
+        celda.removeEventListener('click', this.despejar);
+        celda.removeEventListener('contextmenu', this.marcar);
+
+        // Descontar una casillas pendiente de despejar
+        this.numCasillasADespejar--;
+        console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
+
+        let valorCelda = this.arrayTablero[fila][columna];
+        let esNumero = (valorCelda != 'MINA' && valorCelda != 0);
+        let esBomba = (valorCelda == 'MINA');
+        let esVacio = (valorCelda == 0);
+        let estaDespejado;
+        
+    
+        let celdaNueva;
+
+        if (esNumero) {
+            celda.innerHTML = valorCelda;
+
+            if (this.numCasillasADespejar == 0) {
+                this.resolverTablero(celda, true);
+            }    
+            
+        } else if (esBomba) {
+            this.resolverTablero(celda,false);
+
+        }else if (esVacio) {
+
+            for (let cFila = fila - 1; cFila <= fila + 1; cFila++) {
+                if (cFila >= 0 && cFila < this.filas) {
+                    for (let cColumna = columna - 1; cColumna <= columna + 1; cColumna++) {
+                        if (cColumna >= 0 && cColumna < this.columnas) {
+                            celdaNueva = document.getElementById(`f${cFila}_c${cColumna}`)
+                            estaDespejado = (celdaNueva.dataset.despejado == 'true');
+                            if (!estaDespejado) {
+                                console.log(`f${cFila}_c${cColumna}`);
+                                this.despejarCelda(celdaNueva);
+                            }
+                        }
+                    }
+                }
+            }
+            if (this.numCasillasADespejar == 0) {
+                this.resolverTablero(celda, true);
+            }
+        }
+    }
+
+    marcar(elEvento){
+
+    }
 }
 
 window.onload = function(){
     let juego1 = new Juego(numFilas, numColumnas);
-    console.log(juego1.arrayTablero);
-    juego1.pintarTablero();    
+    console.log(juego1.arrayTablero);   
 }

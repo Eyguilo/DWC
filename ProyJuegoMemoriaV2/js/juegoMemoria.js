@@ -60,6 +60,8 @@ class Juego extends Tablero {
     constructor(filas, columnas) {
         super(filas, columnas);
         this.numCasillasADespejar = filas * columnas;
+        this.casilla1 = "";
+        this.casilla2 = "";
 
         this.colocarElementos();
         this.pintarTablero();
@@ -127,30 +129,31 @@ class Juego extends Tablero {
         let columna = parseInt(celda.dataset.columna);
 
         // Marcar la celda despejada
-        celda.dataset.despejado = true;
-        celda.removeEventListener('contextmenu', this.despejar);
+        //celda.dataset.despejado = true;
+        //celda.removeEventListener('contextmenu', this.despejar);
 
         // Descontar una casillas pendiente de despejar
         this.numCasillasADespejar--;
         console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
 
-        let contador = 0;
+        
+        this.casilla1 = (celda.innerHTML = this.arrayTablero[fila][columna]);
+        if(this.casilla1 != ""){
+            this.casilla2 = this.casilla1;
+        }
+        
 
-        while(contador < 2){
+        //console.log(valorCelda);
 
-        let valorCelda = (celda.innerHTML = this.arrayTablero[fila][columna]);
-        console.log(valorCelda);
         let celdaNueva;
         
         
         
 
-        //this.despejarCelda(celdaNueva = document.getElementById(`f${fila}_c${columna}`))
-
-        contador++;
-        }
-
+        //this.despejarCelda(celdaNueva = document.getElementById(`f${fila}_c${columna}`));
     }
+
+    
 }
 
 window.onload = function(){

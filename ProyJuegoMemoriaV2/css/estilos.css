@@ -17,5 +17,9 @@ td{
     height: 75px;         
     border: solid 3px black;
     font-size: 40px;
+    background-color: mediumslateblue;
+}
+.destapar{
+    background-color: rgb(58, 54, 79);
 }
 

@@ -62,6 +62,8 @@ class Juego extends Tablero {
         this.numCasillasADespejar = filas * columnas;
         this.casilla1 = "";
         this.casilla2 = "";
+        this.primeraId;
+        this.segundaId;
 
         this.colocarElementos();
         this.pintarTablero();
@@ -136,21 +138,36 @@ class Juego extends Tablero {
         this.numCasillasADespejar--;
         console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
 
-        
         this.casilla1 = (celda.innerHTML = this.arrayTablero[fila][columna]);
-        if(this.casilla1 != ""){
+        this.primeraId = document.getElementById(`f${fila}_c${columna}`);
+        this.primeraId.className = "destapar";
+
+        let id1 = this.primeraId;
+        let id2 = this.segundaId;
+
+        if(this.casilla2 == ""){
             this.casilla2 = this.casilla1;
+            this.segundaId = document.getElementById(`f${fila}_c${columna}`);
+        }            
+        if(this.casilla2 != this.casilla1){
+            this.casilla1 = "";
+            this.casilla2 = "";
+            setTimeout(function(){
+                console.log("Retraso de 2s.");
+                id1.className = "td";
+                id1.innerHTML = "";
+                id2.className = "td";
+                id2.innerHTML = "";
+            }, 1000);
+
         }
-        
 
         //console.log(valorCelda);
-
-        let celdaNueva;
-        
-        
-        
-
         //this.despejarCelda(celdaNueva = document.getElementById(`f${fila}_c${columna}`));
+    }
+
+    resolverCelda(){
+
     }
 
     

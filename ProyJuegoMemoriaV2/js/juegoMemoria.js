@@ -60,10 +60,8 @@ class Juego extends Tablero {
     constructor(filas, columnas) {
         super(filas, columnas);
         this.numCasillasADespejar = filas * columnas;
-        this.casilla1 = "";
-        this.casilla2 = "";
-        this.primeraId;
-        this.segundaId;
+        this.primeraId = "";
+        this.segundaId = "";
 
         this.colocarElementos();
         this.pintarTablero();
@@ -132,45 +130,47 @@ class Juego extends Tablero {
 
         // Marcar la celda despejada
         //celda.dataset.despejado = true;
-        //celda.removeEventListener('contextmenu', this.despejar);
+        celda.removeEventListener('contextmenu', this.despejar);
 
         // Descontar una casillas pendiente de despejar
-        this.numCasillasADespejar--;
-        console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
+        //this.numCasillasADespejar--;
+        //console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
 
-        this.casilla1 = (celda.innerHTML = this.arrayTablero[fila][columna]);
+        this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
         this.primeraId.className = "destapar";
+        this.primeraId.dataset.despejado = "true";
 
         let id1 = this.primeraId;
         let id2 = this.segundaId;
 
-        if(this.casilla2 == ""){
-            this.casilla2 = this.casilla1;
+        if(this.segundaId == ""){
+            this.segundaId = this.primeraId;
             this.segundaId = document.getElementById(`f${fila}_c${columna}`);
+            this.segundaId.dataset.despejado = "true";
         }            
-        if(this.casilla2 != this.casilla1){
-            this.casilla1 = "";
-            this.casilla2 = "";
+        if(this.segundaId.innerHTML != this.primeraId.innerHTML){
+            this.segundaId = "";
+            this.segundaId = "";
+            id1.addEventListener('contextmenu', this.despejar);
+            id2.addEventListener('contextmenu', this.despejar);
+            id1.dataset.despejado = "false";
+            id2.dataset.despejado = "false";
             setTimeout(function(){
-                console.log("Retraso de 2s.");
+                console.log("Retraso de 500ms.");
                 id1.className = "td";
-                id1.innerHTML = "";
+                id1.innerHTML = "";                
                 id2.className = "td";
-                id2.innerHTML = "";
-            }, 1000);
-
+                id2.innerHTML = "";                
+            }, 500);
+        }
+        if(this.primeraId.dataset.despejado == "true" && this.segundaId.dataset.despejado == "true"){
+            this.segundaId = "";
         }
 
         //console.log(valorCelda);
         //this.despejarCelda(celdaNueva = document.getElementById(`f${fila}_c${columna}`));
-    }
-
-    resolverCelda(){
-
-    }
-
-    
+    }    
 }
 
 window.onload = function(){

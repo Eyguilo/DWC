@@ -139,7 +139,6 @@ class Juego extends Tablero {
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
         this.primeraId.className = "destapar";
-        this.primeraId.dataset.despejado = "true";
 
         let id1 = this.primeraId;
         let id2 = this.segundaId;
@@ -147,10 +146,11 @@ class Juego extends Tablero {
         if(this.segundaId == ""){
             this.segundaId = this.primeraId;
             this.segundaId = document.getElementById(`f${fila}_c${columna}`);
+            this.primeraId.dataset.despejado = "true";
             this.segundaId.dataset.despejado = "true";
-        }            
-        if(this.segundaId.innerHTML != this.primeraId.innerHTML){
-            this.segundaId = "";
+        }
+        if(this.segundaId.innerHTML != this.primeraId.innerHTML && this.primeraId.dataset.despejado == "false" && this.segundaId.dataset.despejado == "true"){
+            this.primeraId = "";
             this.segundaId = "";
             id1.addEventListener('contextmenu', this.despejar);
             id2.addEventListener('contextmenu', this.despejar);
@@ -164,9 +164,9 @@ class Juego extends Tablero {
                 id2.innerHTML = "";                
             }, 500);
         }
-        if(this.primeraId.dataset.despejado == "true" && this.segundaId.dataset.despejado == "true"){
-            this.segundaId = "";
-        }
+        //if(this.primeraId.dataset.despejado == "true" && this.segundaId.dataset.despejado == "true"){
+          //  this.segundaId = "";
+        //}
 
         //console.log(valorCelda);
         //this.despejarCelda(celdaNueva = document.getElementById(`f${fila}_c${columna}`));

@@ -34,9 +34,22 @@ class Tablero {
 
     //Muestra en el navegador el array.
     pintarTablero() {
+        let contenedor = document.createElement('div');
+        let juego = document.createElement('h1');        
+        let nombre = document.createElement('h1');
+        let boton = document.createElement('button');
         let tabla = document.createElement('table');
         let fila;
         let columna;
+
+        contenedor.id = `contenedor`;
+        contenedor.appendChild(juego);
+        contenedor.appendChild(nombre);
+        contenedor.appendChild(boton);
+        contenedor.appendChild(tabla);
+        juego.textContent = "Juego de Memoria";
+        nombre.textContent = "Jaume Aguiló";
+        boton.textContent = "Reiniciar";
 
         for (let i = 0; i < this.filas; i++) {
             fila = document.createElement('tr');
@@ -51,7 +64,7 @@ class Tablero {
                 fila.appendChild(columna);
             }
         }
-        document.body.appendChild(tabla);
+        document.body.appendChild(contenedor);
     }
 }
 

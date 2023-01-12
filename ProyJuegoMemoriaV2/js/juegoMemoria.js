@@ -62,6 +62,7 @@ class Juego extends Tablero {
         this.numCasillasADespejar = filas * columnas;
         this.primeraId = "";
         this.segundaId = "";
+        this.contadorPareja = 0;
 
         this.colocarElementos();
         this.pintarTablero();
@@ -133,8 +134,8 @@ class Juego extends Tablero {
         celda.removeEventListener('contextmenu', this.despejar);
 
         // Descontar una casillas pendiente de despejar
-        //this.numCasillasADespejar--;
-        //console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
+        this.numCasillasADespejar--;
+        console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
 
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
@@ -149,13 +150,20 @@ class Juego extends Tablero {
             this.primeraId.dataset.despejado = "true";
             this.segundaId.dataset.despejado = "true";
         }
-        if(this.segundaId.innerHTML != this.primeraId.innerHTML && this.primeraId.dataset.despejado == "false" && this.segundaId.dataset.despejado == "true"){
+
+        if(this.segundaId.dataset.despejado == "true"){
+            this.primeraId.dataset.despejado = "true";
+        }
+
+        if(this.segundaId.innerHTML != this.primeraId.innerHTML && this.segundaId.dataset.despejado == "true"){
             this.primeraId = "";
             this.segundaId = "";
             id1.addEventListener('contextmenu', this.despejar);
             id2.addEventListener('contextmenu', this.despejar);
             id1.dataset.despejado = "false";
             id2.dataset.despejado = "false";
+            this.numCasillasADespejar = this.numCasillasADespejar + 2;
+            console.log("Vuelven a quedar " + this.numCasillasADespejar + " casillas por despejar.");
             setTimeout(function(){
                 console.log("Retraso de 500ms.");
                 id1.className = "td";
@@ -164,16 +172,18 @@ class Juego extends Tablero {
                 id2.innerHTML = "";                
             }, 500);
         }
-        //if(this.primeraId.dataset.despejado == "true" && this.segundaId.dataset.despejado == "true"){
-          //  this.segundaId = "";
-        //}
 
-        //console.log(valorCelda);
-        //this.despejarCelda(celdaNueva = document.getElementById(`f${fila}_c${columna}`));
+        this.contadorPareja++;
+
+        if(this.contadorPareja >= 2){
+            this.segundaId = "";
+            this.contadorPareja = 0;
+        }
     }    
 }
 
 window.onload = function(){
-    let juego1 = new Juego(4, 4);
+    let juego1 = new Juego(6, 6);
+    //let juego1 = new Juego(numFilas, numColumnas);
     console.log(juego1.arrayTablero);   
 }

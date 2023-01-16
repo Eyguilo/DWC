@@ -38,4 +38,7 @@ td{
 .destapar{
     background-color: rgb(255, 156, 186);
 }
+::-webkit-textfield-decoration-container{
+    border: 1px solid black;
+}
 

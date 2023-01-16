@@ -1,14 +1,13 @@
-//let numFilas = prompt("Introduzca el número de filas:");
-//let numColumnas = prompt("Introduzca el número de columnas:");
+let numFilas = prompt("Introduzca el número de filas:");
+let numColumnas = prompt("Introduzca el número de columnas:");
 
 
 // Asegura que el tablero cuadre para poder hacer parejas siempre.
-/*while (((numFilas * numColumnas) % 2 != 0) || ((numFilas * numColumnas) < 3) || ((numFilas * numColumnas) > 256)) {
+while (((numFilas * numColumnas) % 2 != 0) || ((numFilas * numColumnas) < 3) || ((numFilas * numColumnas) > 256)) {
     alert("POSIBLES ERRORES:\n- No has introducido un número par de casillas.\n- Es solo de una única pareja.\n- Has introducido un carácter que no es un número.\n- Número máximo de casillas son 256 (16x16).");
     numFilas = prompt("Introduzca de nuevo el número de filas:");
     numColumnas = prompt("Introduzca de nuevo el número de columnas:");
-}*/
-
+}
 class Tablero {
 
     constructor(filas, columnas) {
@@ -34,22 +33,10 @@ class Tablero {
 
     //Muestra en el navegador el array.
     pintarTablero() {
-        let contenedor = document.createElement('div');
-        let juego = document.createElement('h1');        
-        let nombre = document.createElement('h1');
-        let boton = document.createElement('button');
+        
         let tabla = document.createElement('table');
         let fila;
-        let columna;
-
-        contenedor.id = `contenedor`;
-        contenedor.appendChild(juego);
-        contenedor.appendChild(nombre);
-        contenedor.appendChild(boton);
-        contenedor.appendChild(tabla);
-        juego.textContent = "Juego de Memoria";
-        nombre.textContent = "Jaume Aguiló";
-        boton.textContent = "Reiniciar";
+        let columna;        
 
         for (let i = 0; i < this.filas; i++) {
             fila = document.createElement('tr');
@@ -64,7 +51,7 @@ class Tablero {
                 fila.appendChild(columna);
             }
         }
-        document.body.appendChild(contenedor);
+        document.body.appendChild(tabla);
     }
 }
 
@@ -79,14 +66,30 @@ class Juego extends Tablero {
 
         this.colocarElementos();
         this.pintarTablero();
+        this.reiniciar();
     }
 
     pintarTablero(){
+        let contenedor = document.createElement('div');
+        let juego = document.createElement('h1');        
+        let nombre = document.createElement('h1');
+
+        contenedor.id = `contenedor`;
+        contenedor.appendChild(juego);
+        contenedor.appendChild(nombre);
+
+        juego.textContent = "Juego de Memoria";
+        nombre.textContent = "Jaume Aguiló";
+
         super.pintarTablero();
 
         let celda;
+        let boton = document.createElement('button');
+        boton.type = "button";
+        boton.textContent = "Reiniciar";
 
         this.despejar = this.despejar.bind(this);
+        boton.addEventListener('onclick', reiniciar());
 
         for (let i = 0; i < this.filas; i++) {
             for (let j = 0; j < this.columnas; j++){
@@ -192,11 +195,16 @@ class Juego extends Tablero {
             this.segundaId = "";
             this.contadorPareja = 0;
         }
-    }    
+    }
+    
+    reiniciar(){
+        window.onload = function(){
+            let juego1 = new Juego(numFilas, numColumnas);
+        }
+    }
 }
 
 window.onload = function(){
-    let juego1 = new Juego(6, 6);
-    //let juego1 = new Juego(numFilas, numColumnas);
+    let juego1 = new Juego(numFilas, numColumnas);
     console.log(juego1.arrayTablero);   
 }

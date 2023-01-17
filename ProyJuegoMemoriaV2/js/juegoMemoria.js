@@ -1,4 +1,4 @@
-let numFilas = prompt("Introduzca el número de filas:");
+/*let numFilas = prompt("Introduzca el número de filas:");
 let numColumnas = prompt("Introduzca el número de columnas:");
 
 
@@ -7,7 +7,7 @@ while (((numFilas * numColumnas) % 2 != 0) || ((numFilas * numColumnas) < 3) || 
     alert("POSIBLES ERRORES:\n- No has introducido un número par de casillas.\n- Es solo de una única pareja.\n- Has introducido un carácter que no es un número.\n- Número máximo de casillas son 256 (16x16).");
     numFilas = prompt("Introduzca de nuevo el número de filas:");
     numColumnas = prompt("Introduzca de nuevo el número de columnas:");
-}
+}*/
 class Tablero {
 
     constructor(filas, columnas) {
@@ -30,13 +30,43 @@ class Tablero {
             }
         }
     }
+}
 
-    //Muestra en el navegador el array.
-    pintarTablero() {
-        
+class Juego extends Tablero {
+
+    constructor(filas, columnas) {
+        super(filas, columnas);
+        this.numCasillasADespejar = filas * columnas;
+        this.primeraId = "";
+        this.segundaId = "";
+        this.contadorPareja = 0;
+
+        this.colocarElementos();
+        this.pintarTablero();
+    }
+
+    pintarTablero(){
+
+        let contenedor = document.createElement('div');
+        let juego = document.createElement('h1');        
+        let nombre = document.createElement('h1');
+        let btnReinicio = document.createElement('button');
         let tabla = document.createElement('table');
         let fila;
-        let columna;        
+        let columna;
+
+        contenedor.id = `contenedor`;
+        contenedor.appendChild(juego);
+        contenedor.appendChild(nombre);
+
+        contenedor.appendChild(tabla);
+        btnReinicio.id = "btn";
+        btnReinicio.type = "button";
+        btnReinicio.textContent ='Reiniciar';
+        juego.textContent = "Juego de Memoria";
+        nombre.textContent = "Jaume Aguiló";
+
+        
 
         for (let i = 0; i < this.filas; i++) {
             fila = document.createElement('tr');
@@ -51,50 +81,19 @@ class Tablero {
                 fila.appendChild(columna);
             }
         }
-        document.body.appendChild(tabla);
-    }
-}
+        contenedor.appendChild(btnReinicio);
+        document.body.appendChild(contenedor);
 
-class Juego extends Tablero {
-
-    constructor(filas, columnas) {
-        super(filas, columnas);
-        this.numCasillasADespejar = filas * columnas;
-        this.primeraId = "";
-        this.segundaId = "";
-        this.contadorPareja = 0;
-
-        this.colocarElementos();
-        this.pintarTablero();
-        this.reiniciar();
-    }
-
-    pintarTablero(){
-        let contenedor = document.createElement('div');
-        let juego = document.createElement('h1');        
-        let nombre = document.createElement('h1');
-
-        contenedor.id = `contenedor`;
-        contenedor.appendChild(juego);
-        contenedor.appendChild(nombre);
-
-        juego.textContent = "Juego de Memoria";
-        nombre.textContent = "Jaume Aguiló";
-
-        super.pintarTablero();
+        this.reiniciar = this.reiniciar.bind(this);
+        btnReinicio.addEventListener('click', this.reiniciar);
 
         let celda;
-        let boton = document.createElement('button');
-        boton.type = "button";
-        boton.textContent = "Reiniciar";
-
         this.despejar = this.despejar.bind(this);
-        boton.addEventListener('onclick', reiniciar());
 
         for (let i = 0; i < this.filas; i++) {
-            for (let j = 0; j < this.columnas; j++){
-                celda = document.getElementById(`f${i}_c${j}`);
+            for (let j = 0; j < this.columnas; j++) {
 
+                celda = document.getElementById(`f${i}_c${j}`);
                 celda.addEventListener('contextmenu', this.despejar);
             }
         }
@@ -197,14 +196,19 @@ class Juego extends Tablero {
         }
     }
     
-    reiniciar(){
-        window.onload = function(){
-            let juego1 = new Juego(numFilas, numColumnas);
+    reiniciar(elEvento){
+        let evento = elEvento || window.event;
+        let juego = evento.currentTarget;
+        let confirmarReinicio = confirm("¿Estás seguro de reiniciar la partida? Si se reinicia se perderá la puntuación actual.");
+        if(confirmarReinicio){
+            document.getElementById("contenedor").remove();
+            juego = new Juego(5, 5);
         }
     }
 }
 
 window.onload = function(){
-    let juego1 = new Juego(numFilas, numColumnas);
+    //let juego1 = new Juego(numFilas, numColumnas);
+    let juego1 = new Juego(4, 4);
     console.log(juego1.arrayTablero);   
 }

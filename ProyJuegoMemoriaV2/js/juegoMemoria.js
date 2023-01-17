@@ -40,6 +40,7 @@ class Juego extends Tablero {
         this.primeraId = "";
         this.segundaId = "";
         this.contadorPareja = 0;
+        this.puntos = 0;
 
         this.colocarElementos();
         this.pintarTablero();
@@ -50,6 +51,7 @@ class Juego extends Tablero {
         let contenedor = document.createElement('div');
         let juego = document.createElement('h1');        
         let nombre = document.createElement('h1');
+        let puntuacion = document.createElement('h3');
         let btnReinicio = document.createElement('button');
         let tabla = document.createElement('table');
         let fila;
@@ -58,15 +60,15 @@ class Juego extends Tablero {
         contenedor.id = `contenedor`;
         contenedor.appendChild(juego);
         contenedor.appendChild(nombre);
-
+        puntuacion.id = `pnts`;
+        contenedor.appendChild(puntuacion);
         contenedor.appendChild(tabla);
+
         btnReinicio.id = "btn";
         btnReinicio.type = "button";
         btnReinicio.textContent ='Reiniciar';
         juego.textContent = "Juego de Memoria";
         nombre.textContent = "Jaume Aguiló";
-
-        
 
         for (let i = 0; i < this.filas; i++) {
             fila = document.createElement('tr');
@@ -78,6 +80,7 @@ class Juego extends Tablero {
                 columna.dataset.fila = i;
                 columna.dataset.columna = j;
                 columna.dataset.despejado = false;
+                columna.dataset.intentos = 0;
                 fila.appendChild(columna);
             }
         }
@@ -97,6 +100,7 @@ class Juego extends Tablero {
                 celda.addEventListener('contextmenu', this.despejar);
             }
         }
+        this.puntuar(0);
     }
 
     colocarElementos() {
@@ -134,9 +138,7 @@ class Juego extends Tablero {
     despejar(elEvento) {
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
-
-        document.oncontextmenu = function(){return false}
-        
+        document.oncontextmenu = function(){return false}        
         this.despejarCelda(celda);
     }
 
@@ -149,8 +151,9 @@ class Juego extends Tablero {
         celda.removeEventListener('contextmenu', this.despejar);
 
         // Descontar una casillas pendiente de despejar
-        this.numCasillasADespejar--;
-        console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
+        let casillasADespejar = this.numCasillasADespejar;
+        casillasADespejar--;
+        console.log("Quedan " + casillasADespejar + " casillas por despejar.");
 
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
@@ -161,7 +164,6 @@ class Juego extends Tablero {
 
         if(this.segundaId == ""){
             this.segundaId = this.primeraId;
-            this.segundaId = document.getElementById(`f${fila}_c${columna}`);
             this.primeraId.dataset.despejado = "true";
             this.segundaId.dataset.despejado = "true";
         }
@@ -170,15 +172,19 @@ class Juego extends Tablero {
             this.primeraId.dataset.despejado = "true";
         }
 
-        if(this.segundaId.innerHTML != this.primeraId.innerHTML && this.segundaId.dataset.despejado == "true"){
+        if(this.segundaId.innerHTML != this.primeraId.innerHTML /*&& this.segundaId.dataset.despejado == "true"*/){
             this.primeraId = "";
             this.segundaId = "";
             id1.addEventListener('contextmenu', this.despejar);
             id2.addEventListener('contextmenu', this.despejar);
             id1.dataset.despejado = "false";
             id2.dataset.despejado = "false";
+            id1.dataset.intentos++;
+            id2.dataset.intentos++;
             this.numCasillasADespejar = this.numCasillasADespejar + 2;
             console.log("Vuelven a quedar " + this.numCasillasADespejar + " casillas por despejar.");
+            
+
             setTimeout(function(){
                 console.log("Retraso de 500ms.");
                 id1.className = "td";
@@ -186,6 +192,10 @@ class Juego extends Tablero {
                 id2.className = "td";
                 id2.innerHTML = "";                
             }, 500);
+        } 
+        if(id1 == id2){
+
+            this.puntuar(parseInt(this.segundaId.dataset.intentos));
         }
 
         this.contadorPareja++;
@@ -195,6 +205,20 @@ class Juego extends Tablero {
             this.contadorPareja = 0;
         }
     }
+
+    puntuar(intentos){
+        let puntosTotales = (this.numCasillasADespejar / 2) * 10;
+        if(intentos == 1){
+            puntos = puntos + 10;
+        } else if(intentos == 2){
+            puntos = puntos + 5;
+        } else if(intentos == 3){
+            puntos = puntos + 2.5;
+        }
+        
+        document.getElementById("pnts").textContent = `Puntuación: ${this.puntos}/${puntosTotales}`;
+
+    }
     
     reiniciar(elEvento){
         let evento = elEvento || window.event;
@@ -202,7 +226,7 @@ class Juego extends Tablero {
         let confirmarReinicio = confirm("¿Estás seguro de reiniciar la partida? Si se reinicia se perderá la puntuación actual.");
         if(confirmarReinicio){
             document.getElementById("contenedor").remove();
-            juego = new Juego(5, 5);
+            juego = new Juego(4, 4);
         }
     }
 }

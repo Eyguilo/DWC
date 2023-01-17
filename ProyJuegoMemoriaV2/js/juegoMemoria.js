@@ -1,4 +1,4 @@
-/*let numFilas = prompt("Introduzca el número de filas:");
+let numFilas = prompt("Introduzca el número de filas:");
 let numColumnas = prompt("Introduzca el número de columnas:");
 
 
@@ -7,7 +7,7 @@ while (((numFilas * numColumnas) % 2 != 0) || ((numFilas * numColumnas) < 3) || 
     alert("POSIBLES ERRORES:\n- No has introducido un número par de casillas.\n- Es solo de una única pareja.\n- Has introducido un carácter que no es un número.\n- Número máximo de casillas son 256 (16x16).");
     numFilas = prompt("Introduzca de nuevo el número de filas:");
     numColumnas = prompt("Introduzca de nuevo el número de columnas:");
-}*/
+}
 class Tablero {
 
     constructor(filas, columnas) {
@@ -42,6 +42,8 @@ class Juego extends Tablero {
         this.segundaId = "";
         this.contadorPareja = 0;
         this.puntos = 0;
+        this.aux1 = "";
+        this.aux2 = "";
 
         this.colocarElementos();
         this.pintarTablero();
@@ -88,7 +90,7 @@ class Juego extends Tablero {
         contenedor.appendChild(btnReinicio);
         document.body.appendChild(contenedor);
 
-        this.reiniciar = this.reiniciar.bind(this);
+        this.reiniciar = this.reiniciar.bind();
         btnReinicio.addEventListener('click', this.reiniciar);
 
         let celda;
@@ -158,6 +160,7 @@ class Juego extends Tablero {
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
         this.primeraId.className = "destapar";
+        this.primeraId.dataset.intentos++;
 
         let id1 = this.primeraId;
         let id2 = this.segundaId;
@@ -166,9 +169,7 @@ class Juego extends Tablero {
             this.segundaId = this.primeraId;
             this.primeraId.dataset.despejado = "true";
             this.segundaId.dataset.despejado = "true";
-            this.primeraId.dataset.intentos++;
-        } else{
-            this.primeraId.dataset.intentos++;
+
         }
 
         if(this.segundaId.dataset.despejado == "true"){
@@ -198,6 +199,7 @@ class Juego extends Tablero {
         if(id1.innerHTML == id2.innerHTML){
 
             this.puntuar(parseInt(this.segundaId.dataset.intentos));
+            document.getElementsByTagName("tr").dataset.intentos = 0;
         }
 
         this.contadorPareja++;
@@ -222,19 +224,18 @@ class Juego extends Tablero {
 
     }
     
-    reiniciar(elEvento){
-        let evento = elEvento || window.event;
-        let juego = evento.currentTarget;
+    reiniciar(){
         let confirmarReinicio = confirm("¿Estás seguro de reiniciar la partida? Si se reinicia se perderá la puntuación actual.");
         if(confirmarReinicio){
             document.getElementById("contenedor").remove();
-            juego = new Juego(4, 4);
+            //juego = new Juego(numFilas, numColumnas);
+            location.reload();
         }
     }
 }
 
 window.onload = function(){
-    //let juego1 = new Juego(numFilas, numColumnas);
-    let juego1 = new Juego(4, 4);
+    let juego1 = new Juego(numFilas, numColumnas);
+    //let juego1 = new Juego(4, 4);
     console.log(juego1.arrayTablero);   
 }

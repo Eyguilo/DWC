@@ -36,6 +36,7 @@ class Juego extends Tablero {
 
     constructor(filas, columnas) {
         super(filas, columnas);
+        this.casillasTotales = filas * columnas;
         this.numCasillasADespejar = filas * columnas;
         this.primeraId = "";
         this.segundaId = "";
@@ -151,9 +152,8 @@ class Juego extends Tablero {
         celda.removeEventListener('contextmenu', this.despejar);
 
         // Descontar una casillas pendiente de despejar
-        let casillasADespejar = this.numCasillasADespejar;
-        casillasADespejar--;
-        console.log("Quedan " + casillasADespejar + " casillas por despejar.");
+        this.numCasillasADespejar--;
+        console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
 
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
@@ -166,6 +166,9 @@ class Juego extends Tablero {
             this.segundaId = this.primeraId;
             this.primeraId.dataset.despejado = "true";
             this.segundaId.dataset.despejado = "true";
+            this.primeraId.dataset.intentos++;
+        } else{
+            this.primeraId.dataset.intentos++;
         }
 
         if(this.segundaId.dataset.despejado == "true"){
@@ -179,8 +182,6 @@ class Juego extends Tablero {
             id2.addEventListener('contextmenu', this.despejar);
             id1.dataset.despejado = "false";
             id2.dataset.despejado = "false";
-            id1.dataset.intentos++;
-            id2.dataset.intentos++;
             this.numCasillasADespejar = this.numCasillasADespejar + 2;
             console.log("Vuelven a quedar " + this.numCasillasADespejar + " casillas por despejar.");
             
@@ -192,8 +193,9 @@ class Juego extends Tablero {
                 id2.className = "td";
                 id2.innerHTML = "";                
             }, 500);
-        } 
-        if(id1 == id2){
+        }
+
+        if(id1.innerHTML == id2.innerHTML){
 
             this.puntuar(parseInt(this.segundaId.dataset.intentos));
         }
@@ -207,13 +209,13 @@ class Juego extends Tablero {
     }
 
     puntuar(intentos){
-        let puntosTotales = (this.numCasillasADespejar / 2) * 10;
+        let puntosTotales = (this.casillasTotales / 2) * 10;
         if(intentos == 1){
-            puntos = puntos + 10;
+            this.puntos = this.puntos + 10;
         } else if(intentos == 2){
-            puntos = puntos + 5;
+            this.puntos = this.puntos + 5;
         } else if(intentos == 3){
-            puntos = puntos + 2.5;
+            this.puntos = this.puntos + 2.5;
         }
         
         document.getElementById("pnts").textContent = `Puntuación: ${this.puntos}/${puntosTotales}`;

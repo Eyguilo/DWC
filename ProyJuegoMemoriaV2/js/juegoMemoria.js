@@ -1,4 +1,4 @@
-let numFilas = prompt("Introduzca el número de filas:");
+/*let numFilas = prompt("Introduzca el número de filas:");
 let numColumnas = prompt("Introduzca el número de columnas:");
 
 
@@ -7,7 +7,7 @@ while (((numFilas * numColumnas) % 2 != 0) || ((numFilas * numColumnas) < 3) || 
     alert("POSIBLES ERRORES:\n- No has introducido un número par de casillas.\n- Es solo de una única pareja.\n- Has introducido un carácter que no es un número.\n- Número máximo de casillas son 256 (16x16).");
     numFilas = prompt("Introduzca de nuevo el número de filas:");
     numColumnas = prompt("Introduzca de nuevo el número de columnas:");
-}
+}*/
 class Tablero {
 
     constructor(filas, columnas) {
@@ -45,8 +45,8 @@ class Juego extends Tablero {
         this.aux1 = "";
         this.aux2 = "";
 
-        this.colocarElementos();
         this.pintarTablero();
+        this.colocarElementos();        
     }
 
     pintarTablero(){
@@ -94,13 +94,13 @@ class Juego extends Tablero {
         btnReinicio.addEventListener('click', this.reiniciar);
 
         let celda;
-        this.despejar = this.despejar.bind(this);
+        this.despejarCelda = this.despejarCelda.bind(this);
 
         for (let i = 0; i < this.filas; i++) {
             for (let j = 0; j < this.columnas; j++) {
 
                 celda = document.getElementById(`f${i}_c${j}`);
-                celda.addEventListener('contextmenu', this.despejar);
+                celda.addEventListener('contextmenu', this.despejarCelda);
             }
         }
         this.puntuar(0);
@@ -138,55 +138,57 @@ class Juego extends Tablero {
         }
     }
 
-    despejar(elEvento) {
+    /*despejar(elEvento) {
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
         document.oncontextmenu = function(){return false}        
         this.despejarCelda(celda);
-    }
+    }*/
 
-    despejarCelda(celda) {
+    despejarCelda(elEvento) {
+        let evento = elEvento || window.event;
+        let celda = evento.currentTarget;
+        document.oncontextmenu = function(){return false}
+           
         let fila = parseInt(celda.dataset.fila);
         let columna = parseInt(celda.dataset.columna);
 
         // Marcar la celda despejada
-        //celda.dataset.despejado = true;
-        celda.removeEventListener('contextmenu', this.despejar);
+        celda.removeEventListener('contextmenu', this.despejarCelda);
 
         // Descontar una casillas pendiente de despejar
         this.numCasillasADespejar--;
-        console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar.");
+        console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar. Casilla: " + celda.id);
 
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
         this.primeraId.className = "destapar";
         this.primeraId.dataset.intentos++;
+        this.primeraId.dataset.despejado = "true";
 
         let id1 = this.primeraId;
         let id2 = this.segundaId;
 
         if(this.segundaId == ""){
             this.segundaId = this.primeraId;
-            this.primeraId.dataset.despejado = "true";
-            this.segundaId.dataset.despejado = "true";
+            this.segundaId.dataset.despejado = "true";                      
+        }        
 
-        }
+        /*if(this.primeraId.dataset.despejado == "true" && this.segundaId.dataset.intentos == 1){
+            this.aux1.dataset.intentos = 0;
+            this.aux2.dataset.intentos = 0;
+        }*/
 
-        if(this.segundaId.dataset.despejado == "true"){
-            this.primeraId.dataset.despejado = "true";
-        }
+        if(this.segundaId.innerHTML != this.primeraId.innerHTML){
 
-        if(this.segundaId.innerHTML != this.primeraId.innerHTML /*&& this.segundaId.dataset.despejado == "true"*/){
-            this.primeraId = "";
-            this.segundaId = "";
-            id1.addEventListener('contextmenu', this.despejar);
-            id2.addEventListener('contextmenu', this.despejar);
+            id1.addEventListener('contextmenu', this.despejarCelda);
+            id2.addEventListener('contextmenu', this.despejarCelda);
             id1.dataset.despejado = "false";
             id2.dataset.despejado = "false";
+            this.aux1 = this.primeraId;
+            this.aux2 = this.segundaId;
             this.numCasillasADespejar = this.numCasillasADespejar + 2;
             console.log("Vuelven a quedar " + this.numCasillasADespejar + " casillas por despejar.");
-            
-
             setTimeout(function(){
                 console.log("Retraso de 500ms.");
                 id1.className = "td";
@@ -194,18 +196,24 @@ class Juego extends Tablero {
                 id2.className = "td";
                 id2.innerHTML = "";                
             }, 500);
-        }
+            this.segundaId = "";
 
-        if(id1.innerHTML == id2.innerHTML){
-
-            this.puntuar(parseInt(this.segundaId.dataset.intentos));
-            document.getElementsByTagName("tr").dataset.intentos = 0;
+        } else if(id1.innerHTML == id2.innerHTML){   
+            
+            if(id1.dataset.intentos > id2.dataset.intentos){
+                this.puntuar(parseInt(this.primeraId.dataset.intentos));
+            } else{
+                this.puntuar(parseInt(this.segundaId.dataset.intentos));
+            }
+            
+            this.aux1 = this.primeraId;
+            this.aux2 = this.segundaId;
+            this.segundaId = "";
         }
 
         this.contadorPareja++;
 
         if(this.contadorPareja >= 2){
-            this.segundaId = "";
             this.contadorPareja = 0;
         }
     }
@@ -225,17 +233,17 @@ class Juego extends Tablero {
     }
     
     reiniciar(){
-        let confirmarReinicio = confirm("¿Estás seguro de reiniciar la partida? Si se reinicia se perderá la puntuación actual.");
-        if(confirmarReinicio){
+        //let confirmarReinicio = confirm("¿Estás seguro de reiniciar la partida? Si se reinicia se perderá la puntuación actual.");
+        //if(confirmarReinicio){
             document.getElementById("contenedor").remove();
-            //juego = new Juego(numFilas, numColumnas);
-            location.reload();
-        }
+            let juego1 = new Juego(4, 4);
+            //location.reload();
+        //}
     }
 }
 
 window.onload = function(){
-    let juego1 = new Juego(numFilas, numColumnas);
-    //let juego1 = new Juego(4, 4);
+    //let juego1 = new Juego(numFilas, numColumnas);
+    let juego1 = new Juego(4, 4);
     console.log(juego1.arrayTablero);   
 }

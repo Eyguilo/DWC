@@ -163,16 +163,26 @@ class Juego extends Tablero {
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
         this.primeraId.className = "destapar";
-        this.primeraId.dataset.intentos++;
+
         this.primeraId.dataset.despejado = "true";
 
         let id1 = this.primeraId;
         let id2 = this.segundaId;
 
+        if(this.primeraId != this.aux1 && this.primeraId !=this.aux2 && this.segundaId != "" && this.primeraId != this.segundaId){
+            this.aux1.dataset.intentos = 0;
+            this.aux2.dataset.intentos = 0;
+        }
+
         if(this.segundaId == ""){
             this.segundaId = this.primeraId;
-            this.segundaId.dataset.despejado = "true";                      
-        }        
+            this.segundaId.dataset.despejado = "true";
+            this.aux2 = this.segundaId;                      
+        } 
+        if(this.segundaId.dataset.despejado == "true")        {
+            this.aux1 = this.primeraId;
+            this.primeraId.dataset.intentos++;
+        }
 
         /*if(this.primeraId.dataset.despejado == "true" && this.segundaId.dataset.intentos == 1){
             this.aux1.dataset.intentos = 0;
@@ -185,8 +195,7 @@ class Juego extends Tablero {
             id2.addEventListener('contextmenu', this.despejarCelda);
             id1.dataset.despejado = "false";
             id2.dataset.despejado = "false";
-            this.aux1 = this.primeraId;
-            this.aux2 = this.segundaId;
+
             this.numCasillasADespejar = this.numCasillasADespejar + 2;
             console.log("Vuelven a quedar " + this.numCasillasADespejar + " casillas por despejar.");
             setTimeout(function(){
@@ -196,6 +205,7 @@ class Juego extends Tablero {
                 id2.className = "td";
                 id2.innerHTML = "";                
             }, 500);
+
             this.segundaId = "";
 
         } else if(id1.innerHTML == id2.innerHTML){   
@@ -229,7 +239,6 @@ class Juego extends Tablero {
         }
         
         document.getElementById("pnts").textContent = `Puntuación: ${this.puntos}/${puntosTotales}`;
-
     }
     
     reiniciar(){

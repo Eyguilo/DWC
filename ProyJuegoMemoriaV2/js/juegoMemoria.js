@@ -48,7 +48,7 @@ class Juego extends Tablero {
         this.pintarTablero();
         this.colocarElementos();        
     }
-
+    
     pintarTablero(){
 
         let contenedor = document.createElement('div');
@@ -138,13 +138,6 @@ class Juego extends Tablero {
         }
     }
 
-    /*despejar(elEvento) {
-        let evento = elEvento || window.event;
-        let celda = evento.currentTarget;
-        document.oncontextmenu = function(){return false}        
-        this.despejarCelda(celda);
-    }*/
-
     despejarCelda(elEvento) {
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
@@ -163,62 +156,25 @@ class Juego extends Tablero {
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
         this.primeraId.className = "destapar";
-
+        this.primeraId.dataset.intentos++;
         this.primeraId.dataset.despejado = "true";
 
         let id1 = this.primeraId;
         let id2 = this.segundaId;
 
-        if(this.primeraId != this.aux1 && this.primeraId !=this.aux2 && this.segundaId != "" && this.primeraId != this.segundaId){
-            this.aux1.dataset.intentos = 0;
-            this.aux2.dataset.intentos = 0;
-        }
-
         if(this.segundaId == ""){
             this.segundaId = this.primeraId;
-            this.segundaId.dataset.despejado = "true";
-            this.aux2 = this.segundaId;                      
-        } 
-        if(this.segundaId.dataset.despejado == "true")        {
-            this.aux1 = this.primeraId;
-            this.primeraId.dataset.intentos++;
+            this.segundaId.dataset.despejado = "true";                     
         }
-
-        /*if(this.primeraId.dataset.despejado == "true" && this.segundaId.dataset.intentos == 1){
-            this.aux1.dataset.intentos = 0;
-            this.aux2.dataset.intentos = 0;
-        }*/
 
         if(this.segundaId.innerHTML != this.primeraId.innerHTML){
 
-            id1.addEventListener('contextmenu', this.despejarCelda);
-            id2.addEventListener('contextmenu', this.despejarCelda);
-            id1.dataset.despejado = "false";
-            id2.dataset.despejado = "false";
+            this.sonDistintos(id1, id2);
 
-            this.numCasillasADespejar = this.numCasillasADespejar + 2;
-            console.log("Vuelven a quedar " + this.numCasillasADespejar + " casillas por despejar.");
-            setTimeout(function(){
-                console.log("Retraso de 500ms.");
-                id1.className = "td";
-                id1.innerHTML = "";                
-                id2.className = "td";
-                id2.innerHTML = "";                
-            }, 500);
-
-            this.segundaId = "";
-
-        } else if(id1.innerHTML == id2.innerHTML){   
+        } else if(id1.innerHTML == id2.innerHTML){
             
-            if(id1.dataset.intentos > id2.dataset.intentos){
-                this.puntuar(parseInt(this.primeraId.dataset.intentos));
-            } else{
-                this.puntuar(parseInt(this.segundaId.dataset.intentos));
-            }
+            this.sonIguales();
             
-            this.aux1 = this.primeraId;
-            this.aux2 = this.segundaId;
-            this.segundaId = "";
         }
 
         this.contadorPareja++;
@@ -226,6 +182,98 @@ class Juego extends Tablero {
         if(this.contadorPareja >= 2){
             this.contadorPareja = 0;
         }
+    }
+    
+    sonDistintos(id1, id2){
+
+        id1.addEventListener('contextmenu', this.despejarCelda);
+        id2.addEventListener('contextmenu', this.despejarCelda);
+
+        if(this.numCasillasADespejar > 14 || (this.aux1 != "" && this.aux2 != "")){
+            if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
+                this.aux2.dataset.intentos = 0;
+            } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
+                this.aux1.dataset.intentos = 0;
+            } else{
+                this.auxiliares();
+            }
+        }
+
+        this.aux1 = this.primeraId;
+        this.aux2 = this.segundaId;
+
+        this.tapar(id1, id2);            
+
+        this.segundaId = "";
+    }
+
+    sonIguales(){
+
+        if (this.numCasillasADespejar == 14) {
+            if(this.aux1 == "" && this.aux2 == ""){
+                this.aux1 = "";
+                this.aux2 = "";
+            } else if(this.primeraId.dataset.despejado == "true" &&  this.segundaId.dataset.despejado == "true"){
+                if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
+                    this.aux2.dataset.intentos = 0;
+                    this.aux1 = "";
+                    this.aux2 = "";
+                } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
+                    this.aux1.dataset.intentos = 0;
+                    this.aux1 = "";
+                    this.aux2 = "";
+                } else{
+                    this.auxiliares();
+                    this.aux1 = "";
+                    this.aux2 = "";
+                }
+            } 
+
+        } else if(this.aux1 != "" && this.aux2 != "" && this.aux1 != this.primeraId && this.aux2 != this.segundaId){
+            if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
+                this.aux2.dataset.intentos = 0;
+            } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
+                this.aux1.dataset.intentos = 0;
+            } else{
+                this.auxiliares();
+            }
+            this.aux1 = "";
+            this.aux2 = "";
+        }  else if(this.aux1 == "" && this.aux2 == ""){
+            this.aux1 = "";
+            this.aux2 = "";
+        } else if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
+            this.aux2.dataset.intentos = 0;
+        } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
+            this.aux1.dataset.intentos = 0;
+        }
+        
+        if(this.primeraId.dataset.intentos > this.segundaId.dataset.intentos){
+            this.puntuar(parseInt(this.primeraId.dataset.intentos));
+        } else{
+            this.puntuar(parseInt(this.segundaId.dataset.intentos));
+        }
+
+        this.segundaId = "";
+    }
+
+    auxiliares(){
+        this.aux1.dataset.intentos = 0;
+        this.aux2.dataset.intentos = 0;
+    }
+
+    tapar(id1, id2){
+        id1.dataset.despejado = "false";
+        id2.dataset.despejado = "false";
+        this.numCasillasADespejar = this.numCasillasADespejar + 2;
+        console.log("Vuelven a quedar " + this.numCasillasADespejar + " casillas por despejar.");
+        setTimeout(function(){
+            console.log("Retraso de 500ms.");
+            id1.className = "td";
+            id1.innerHTML = "";                
+            id2.className = "td";
+            id2.innerHTML = "";                
+        }, 500);
     }
 
     puntuar(intentos){

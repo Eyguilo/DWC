@@ -17,7 +17,7 @@ class Tablero {
         this.crearTablero();
     }
 
-    //Crea el array que contendrá los elementos del juego
+    //Crea el array que contendrá los elementos del juego.
     crearTablero() {
 
         this.arrayTablero = [];
@@ -41,19 +41,19 @@ class Juego extends Tablero {
         this.numCasillasADespejar = filas * columnas;
         this.primeraId = "";
         this.segundaId = "";
-        this.contadorPareja = 0;
         this.puntos = 0;
         this.aux1 = "";
         this.aux2 = "";
-        this.fecha1 = "";
-        this.fecha2 = "";
+        this.tiempo1 = "";
+        this.tiempo2 = "";
 
         this.pintarTablero();
-        this.colocarElementos();      
+        this.colocarElementos();
     }
     
     pintarTablero(){
 
+        // Creamos elementos del tablero.
         let contenedor = document.createElement('div');
         let central = document.createElement('div');
         let juego = document.createElement('h1');        
@@ -65,6 +65,8 @@ class Juego extends Tablero {
         let fila;
         let columna;
 
+        // Colgados elementos de contenedor, creamos id's y
+        // añadimos textos.
         contenedor.id = `contenedor`;
         contenedor.appendChild(central);
         central.id = `central`;
@@ -83,6 +85,7 @@ class Juego extends Tablero {
         nombre.textContent = "Jaume Aguiló";
         tiempo.textContent = this.tiempo;
 
+        // Se crea a cada celda (columna) su id.
         for (let i = 0; i < this.filas; i++) {
             fila = document.createElement('tr');
             tabla.appendChild(fila);
@@ -97,15 +100,19 @@ class Juego extends Tablero {
                 fila.appendChild(columna);
             }
         }
+
         central.appendChild(btnReinicio);
         document.body.appendChild(contenedor);
 
+        // Se añade al botón la función de reiniciar.
         this.reiniciar = this.reiniciar.bind();
         btnReinicio.addEventListener('click', this.reiniciar);
+
 
         let celda;
         this.despejarCelda = this.despejarCelda.bind(this);
 
+        // Se añade a cada celda la función despejarCelda().
         for (let i = 0; i < this.filas; i++) {
             for (let j = 0; j < this.columnas; j++) {
 
@@ -150,8 +157,9 @@ class Juego extends Tablero {
 
     despejarCelda(elEvento) {
 
-        if(this.fecha1 == ""){
-            this.fecha1 = (new Date().getTime()) / 1000;
+        // Guarda el primer tiempo del primer clic, de culaquier casilla del tablero.
+        if(this.tiempo1 == ""){
+            this.tiempo1 = (new Date().getTime()) / 1000;
         }
 
         let evento = elEvento || window.event;
@@ -161,27 +169,31 @@ class Juego extends Tablero {
         let fila = parseInt(celda.dataset.fila);
         let columna = parseInt(celda.dataset.columna);
 
-        // Marcar la celda despejada
+        // Elimina el evento de la celda despejada
         celda.removeEventListener('contextmenu', this.despejarCelda);
 
-        // Descontar una casillas pendiente de despejar
+        // Descueenta una casilla de numCasillasDespejar.
         this.numCasillasADespejar--;
         console.log("Quedan " + this.numCasillasADespejar + " casillas por despejar. Casilla: " + celda.id);
 
+        // this.primeraId coge el innerHtml, el id, la clase destapar, se suma un intento y despejado es "true" de celda.
         this.primeraId = (celda.innerHTML = this.arrayTablero[fila][columna]);
         this.primeraId = document.getElementById(`f${fila}_c${columna}`);
         this.primeraId.className = "destapar";
         this.primeraId.dataset.intentos++;
         this.primeraId.dataset.despejado = "true";
 
+        // Se crean id1 y id2 para poder trabajar en el contexto de este método.
         let id1 = this.primeraId;
         let id2 = this.segundaId;
 
+        // this.segundaId siempre será this.primeraId siemrpre que this.segundaId esté vacía("").
         if(this.segundaId == ""){
             this.segundaId = this.primeraId;
             this.segundaId.dataset.despejado = "true";                     
         }
 
+        // Elije condición cumple la comparación de las casillas.
         if(this.segundaId.innerHTML != this.primeraId.innerHTML){
 
             this.sonDistintos(id1, id2);
@@ -191,20 +203,17 @@ class Juego extends Tablero {
             this.sonIguales();
             
         }
-
-        this.contadorPareja++;
-
-        if(this.contadorPareja >= 2){
-            this.contadorPareja = 0;
-        }
     }
     
     sonDistintos(id1, id2){
 
+        // Añadimos los eventos a las celdas destapadas.
         id1.addEventListener('contextmenu', this.despejarCelda);
         id2.addEventListener('contextmenu', this.despejarCelda);
 
-        if(this.numCasillasADespejar > (this.casillasTotales - 2) || (this.aux1 != "" && this.aux2 != "")){
+        // Comprobación que permite saber a que casilla reiniciar los intentos si aún no se ha realizado ninguna
+        // pareja correcta o cuando la pareja antigua no comparte ninguna casilla en común con la pareja nueva.
+        if((this.aux1 != "" && this.aux2 != "")){
             if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
                 this.aux2.dataset.intentos = 0;
             } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
@@ -278,10 +287,11 @@ class Juego extends Tablero {
         this.aux2.dataset.intentos = 0;
     }
 
+    // Confirma que se ha acabado, mostrando un mensaje de enhorabuena con los puntos y los segundos totales jugados.
     haGanado(puntos, puntosTotales){
 
-        this.fecha2 = (new Date().getTime()) / 1000;
-        let tiempoFinal = this.fecha2 - this.fecha1;
+        this.tiempo2 = (new Date().getTime()) / 1000;
+        let tiempoFinal = this.tiempo2 - this.tiempo1;
         if(this.numCasillasADespejar == 0){
             setTimeout(function(){
                 let finalizar = confirm(`¡Enhorabuena, has Ganado.\n\nHas conseguido ${puntos}/${puntosTotales} puntos en ${Math.floor(tiempoFinal)} segundos.`)
@@ -315,28 +325,18 @@ class Juego extends Tablero {
             this.puntos = this.puntos + 5;
         } else if(intentos == 3){
             this.puntos = this.puntos + 2.5;
-        }
-        
+        }        
         document.getElementById("pnts").textContent = `Puntuación: ${this.puntos}/${this.puntosTotales}`;
     }
     
     reiniciar(){
-        this.fecha2 = (new Date().getTime()) / 1000;
-        let tiempoFinal = this.fecha2 - this.fecha1;
-        if(this.numCasillasADespejar == 0){
-            let confirmarReinicio = confirm(`¿Estás seguro de reiniciar la partida? Si se reinicia se perderá la puntuación.`);
-            if(confirmarReinicio){
-                document.getElementById("contenedor").remove();
-                location.reload();
-            }
-        } else{
-            let confirmarReinicio = confirm(`¿Estás seguro de reiniciar la partida? Si se reinicia se perderá la puntuación.\n\n` + 
-            `Has conseguido ${this.puntos}/${this.puntosTotales} puntos en ${Math.floor(tiempoFinal)} segundos.`);
-            if(confirmarReinicio){
-                document.getElementById("contenedor").remove();
-                location.reload();
-            }
-        }
+        let confirmarReinicio = confirm(`¿Estás seguro de reiniciar la partida?`
+        + `Si se reinicia se perderá la puntuación.`);
+
+        if(confirmarReinicio){
+            document.getElementById("contenedor").remove();
+            location.reload();
+        }        
     }
 }
 

@@ -195,23 +195,18 @@ class Juego extends Tablero {
 
         // Elije condición cumple la comparación de las casillas.
         if(this.segundaId.innerHTML != this.primeraId.innerHTML){
-
             this.sonDistintos(id1, id2);
-
-        } else if(id1.innerHTML == id2.innerHTML){
-            
-            this.sonIguales();
-            
+        } else if(id1.innerHTML == id2.innerHTML){            
+            this.sonIguales();            
         }
     }
     
     sonDistintos(id1, id2){
-
         // Añadimos los eventos a las celdas destapadas.
         id1.addEventListener('contextmenu', this.despejarCelda);
         id2.addEventListener('contextmenu', this.despejarCelda);
 
-        // Comprobación que permite saber a que casilla reiniciar los intentos si aún no se ha realizado ninguna
+        // Comprobación que permite saber que casilla reiniciar los intentos si aún no se ha realizado ninguna
         // pareja correcta o cuando la pareja antigua no comparte ninguna casilla en común con la pareja nueva.
         if((this.aux1 != "" && this.aux2 != "")){
             if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
@@ -219,97 +214,72 @@ class Juego extends Tablero {
             } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
                 this.aux1.dataset.intentos = 0;
             } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "false"){
-                this.auxiliares();
+                this.aux1.dataset.intentos = 0;
+                this.aux2.dataset.intentos = 0;
             }
         }
 
+        // Coge la pareja actual como la pareja vieja.
         this.aux1 = this.primeraId;
         this.aux2 = this.segundaId;
-
-        this.tapar(id1, id2);            
-
+        // Tapamos las casillas.
+        this.tapar(id1, id2);
+        // Reinicia la segundaId para poder guardar la que vaya a ser la nueva segundaId.
         this.segundaId = "";
     }
 
     sonIguales(){
-
-        if (this.numCasillasADespejar == this.casillasTotales - 2) {
-            if(this.aux1 == "" && this.aux2 == ""){
-                this.aux1 = "";
-                this.aux2 = "";
-            } else{
-                if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
-                    this.aux2.dataset.intentos = 0;
-                    this.aux1 = "";
-                    this.aux2 = "";
-                } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
-                    this.aux1.dataset.intentos = 0;
-                    this.aux1 = "";
-                    this.aux2 = "";
-                } else{
-                    this.auxiliares();
-                    this.aux1 = "";
-                    this.aux2 = "";
-                }
-            }
-        } else if(this.aux1 != "" && this.aux2 != "" && this.aux1 != this.primeraId && this.aux2 != this.segundaId){
-            if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
-                this.aux2.dataset.intentos = 0;
-            } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
-                this.aux1.dataset.intentos = 0;
-            } else{
-                this.auxiliares();
-            }
-            this.aux1 = "";
-            this.aux2 = "";
-        }  else if(this.aux1 == "" && this.aux2 == ""){
-            this.aux1 = "";
-            this.aux2 = "";
-        } else if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
-            this.aux2.dataset.intentos = 0;
-        } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
-            this.aux1.dataset.intentos = 0;
-        }
-        
+        // Comprueba cual de las dos casillas tiene más intentos para saber que puntuación dar
         if(this.primeraId.dataset.intentos > this.segundaId.dataset.intentos){
             this.puntuar(parseInt(this.primeraId.dataset.intentos));
         } else{
             this.puntuar(parseInt(this.segundaId.dataset.intentos));
         }
 
-        this.segundaId = "";
-        
-        this.haGanado(this.puntos, this.puntosTotales);
+        // Comprueba que casilla tiene que reiniciar los intentos de la pareja anterior errónea
+        if(this.aux1 == "" && this.aux2 == ""){
+            this.aux1 = "";
+            this.aux2 = "";
+        }else if(this.aux1.dataset.despejado == "true" &&  this.aux2.dataset.despejado == "false"){
+            this.aux2.dataset.intentos = 0;
+        } else if(this.aux1.dataset.despejado == "false" &&  this.aux2.dataset.despejado == "true"){
+            this.aux1.dataset.intentos = 0;
+        } else{
+            this.aux1.dataset.intentos = 0;
+            this.aux2.dataset.intentos = 0;
+        }
+
+        this.aux1 = "";
+        this.aux2 = "";
+        this.segundaId = "";        
+        this.ganar(this.puntos, this.puntosTotales);
     }
 
-    auxiliares(){
-        this.aux1.dataset.intentos = 0;
-        this.aux2.dataset.intentos = 0;
-    }
-
-    // Confirma que se ha acabado, mostrando un mensaje de enhorabuena con los puntos y los segundos totales jugados.
-    haGanado(puntos, puntosTotales){
-
+    // Confirma que ha acabado, mostrando un mensaje de enhorabuena 
+    // con los puntos y los segundos totales jugados.
+    ganar(puntos, puntosTotales){
         this.tiempo2 = (new Date().getTime()) / 1000;
         let tiempoFinal = this.tiempo2 - this.tiempo1;
         if(this.numCasillasADespejar == 0){
             setTimeout(function(){
-                let finalizar = confirm(`¡Enhorabuena, has Ganado.\n\nHas conseguido ${puntos}/${puntosTotales} puntos en ${Math.floor(tiempoFinal)} segundos.`)
+                let finalizar = confirm(`¡Enhorabuena, has Ganado.\n\nHas conseguido `+
+                `${puntos}/${puntosTotales} puntos en ${Math.floor(tiempoFinal)} segundos.`);
                 if(finalizar){
                     document.getElementById("contenedor").remove();
                     location.reload();
                 }
-            }, 500);
+            }, 250);
         }
     }
 
+    // Vuelve a tapar las casillas con un retraso de tiempo 
+    // para poder ver el contenido de la casilla
     tapar(id1, id2){
         id1.dataset.despejado = "false";
         id2.dataset.despejado = "false";
         this.numCasillasADespejar = this.numCasillasADespejar + 2;
         console.log("Vuelven a quedar " + this.numCasillasADespejar + " casillas por despejar.");
         setTimeout(function(){
-            console.log("Retraso de 500ms.");
             id1.className = "td";
             id1.innerHTML = "";                
             id2.className = "td";
@@ -318,7 +288,6 @@ class Juego extends Tablero {
     }
 
     puntuar(intentos){
-
         if(intentos == 1){
             this.puntos = this.puntos + 10;
         } else if(intentos == 2){
@@ -332,7 +301,6 @@ class Juego extends Tablero {
     reiniciar(){
         let confirmarReinicio = confirm(`¿Estás seguro de reiniciar la partida?`
         + `Si se reinicia se perderá la puntuación.`);
-
         if(confirmarReinicio){
             document.getElementById("contenedor").remove();
             location.reload();

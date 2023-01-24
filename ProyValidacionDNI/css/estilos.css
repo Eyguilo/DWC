@@ -1,34 +1,91 @@
-*{
-    margin: 0%;
-    padding: 0%;
+main{
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
 }
-#contenedor{
-    font-family: Arial, Helvetica, sans-serif;
+
+h1{
+    text-align: center;
+    font-family: sans-serif;
+}
+
+label{
+    text-align: left;
+    font-family: sans-serif;
+    color: gray;
+}
+
+input{
+    width: 97%;
+    font-size: 1.2em;
+    padding: .2em;
+    margin-bottom: .5em;
+    border-radius: 5px;
+    border: 1px solid red;
+    outline: none;
+}
+
+button{
+    width: 100%;
+    font-size: 1.5em;
+    border: none;
+    background-color: gray;
+    padding: .4em;
+    color: white;
+    border-radius: 10px;
+}
+
+button:disabled{
+    background-color: lightgray;
+    color: white;
+}
+
+/* Capa que pone borde verde a los controles
+cuando su contenido es válido */
+.verde{
+    border-color: green;
+}
+
+/* Capa que muestra los errores */
+#error{
+    color: red;
+    font-family: sans-serif;
+    margin-top: 3em;
+}
+
+/* Capa inicialmente oculta
+Cuando se muestra desvanece el formulario */
+#telon{
+    position: fixed;
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 100vw;
-    min-height: 100vh;
+    z-index: 100;
+    background-color: black;
+    opacity: .5;
+    display: none;
 }
-#central{
-    max-width: 320px;
-    width: 100%;
+
+/* Capa por encima de la capa telon
+Inicialmente oculta con el mensaje
+de envío de datos correctos */
+#mensaje{
+    position: fixed;
+    left: 50%;
+    margin-left: -150px;
+    margin-top: -100px;
+    top: 50%;
+    width: 300px;
+    height: 200px;
+    z-index: 200;
+    background-color: white;
+    display: none;
 }
-#inicio{
-    width: 100%;
-    padding: 50px 30px;
-    box-sizing: border-box;
-    border: 4px solid black;
-    border-radius: 30px;
-}
-.titulo{
-    font-size: 200%;
+
+#mensaje p{
+    font-weight: bold;
+    font-size: 2em;
     text-align: center;
-    margin-bottom: 20px;
-    font-weight: bolder;
-}
-.apartados{
-    color: darkgray;
+    font-family: sans-serif;
 }

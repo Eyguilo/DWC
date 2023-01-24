@@ -4,28 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validación</title>
+    <title>Registrar usuario</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <script src="js/validacionNIF.js"></script>
 </head>
 <body>
-    <div id="contenedor">
-        <div id="central">
-            <div id="inicio">
-                <div class="titulo">Registrar usuario</div>
-                <form id="inicioFormulario">
-                    <p class="apartados">Nombre</p>
-                    <input type="text" name="nombre" required>
-                    <p class="apartados">Apellidos</p>
-                    <input type="text" name="apellidos" required>
-                    <p class="apartados">Email</p>
-                    <input type="text" name="email" required>
-                    <p class="apartados">NIF</p>
-                    <input type="text" name="nid" required>
-                    <button type="submit" name="enviar">Enviar</button>
-                </form>
-            </div>            
+    <main>
+        <h1>Registrar usuario</h1>
+        <form action="#" autocomplete="off">
+            <label for="nombre">Nombre</label><br>
+            <input type="text" id="nombre" name="nombre" autofocus maxlength="20"><br>
+            <label for="apellidos">Apellidos</label><br>
+            <input type="text" id="apellidos" name="apellidos" maxlength="60"><br>
+            <label for="email">Email</label><br>
+            <input type="text" id="email" name="email" maxlength="250"><br>
+            <label for="NIF">NIF</label><br>
+            <input type="text" id="NIF" name="NIF" maxlength="9"><br>
+            <button id="botonEnviar" disabled>Enviar</button>
+        </form>
+    </main>
+
+    <div id="error">
+
+    </div>
+
+    <div id="telon">
+        <div id="mensaje">
+            <p>Los datos se han enviado correctamente</p>
         </div>
     </div>
-    
 </body>
 </html>

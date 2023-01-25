@@ -23,6 +23,15 @@ function validarEmail() {
     }
 }
 
+function velidarPrefijoTlf() {
+    let patron = /^[89][12345678][0123456789]{7}$/;
+
+    this.className = "";
+    if (patron.test(this.value)) {
+        this.className = "verde";
+    }
+}
+
 
 
 
@@ -35,10 +44,4 @@ window.addEventListener('load', function(){
     nombre.addEventListener('keyup', validarNombre);
     apellidos.addEventListener('keyup', validarNombre);
     email.addEventListener('keyup', validarEmail);
-});
-
-window.addEventListener('load', function(){
-    let email = document.getElementById('email');
-
-    email.addEventListener('keyup', validarNombre);
 });

@@ -1,0 +1,26 @@
+<contenedores>
+    <grandes></grandes>
+    <medianos></medianos>
+    <verticales></verticales>
+</contenedores>
+
+<envases>
+    <grandeAncho></grandeAncho>
+    <grandeAlto></grandeAlto>
+    <medianoAncho></medianoAncho>
+    <medianoAlto></medianoAlto>
+    <pequeno></pequeno>
+</envases>
+
+<liquidos>
+    <agua></agua>
+    <leche></leche>
+    <lejia></lejia>
+    <amoniaco></amoniaco>
+    <jabon></jabon>
+    <aguarras></aguarras>
+    <gasolina></gasolina>
+    <aceite></aceite>
+    <vinagre></vinagre>
+    <alcohol></alcohol>
+</liquidos>

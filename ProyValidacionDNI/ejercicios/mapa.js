@@ -6,21 +6,16 @@ const registroPacientes = new Map([
 
 
 const registroPacientesV2 = new Map();
-let datos = new Array();
-let contArrayX = 0;
-let contArrayY = 0;
 let cont = 1;
-
 registroPacientes.forEach((value, key) => {
 
-
-    let  nombreCompleto = value.split(' (',1);
-    let valueFinal = "nombreRegistro"
+    let numeroRegistro= key;
+    let nombreCompleto = value.split(' ',2);
+    let numeroSS1 = value.split(')',1);
+    let valueFinal = "\nnumeroRegistro: " + numeroRegistro +
+    " \nnombreRegistro " + nombreCompleto + "\nnumeroSS: " + numeroSS1;
     registroPacientesV2.set(`Paciente ${cont}`, valueFinal);
     cont++;
 });
 
 console.log(registroPacientesV2);
-
-let foo = registroPacientes.split[0][0](' ');
-console.log(foo);

@@ -7,6 +7,7 @@ const registroPacientes = new Map([
 
 const registroPacientesV2 = new Map();
 let cont = 1;
+
 registroPacientes.forEach((value, key) => {
 
     let numeroRegistro= key;

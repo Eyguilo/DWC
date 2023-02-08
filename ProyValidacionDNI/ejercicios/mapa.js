@@ -10,10 +10,13 @@ let cont = 1;
 registroPacientes.forEach((value, key) => {
 
     let numeroRegistro= key;
-    let nombreCompleto = value.split(' ',2);
-    let numeroSS1 = value.split(')',1);
-    let valueFinal = "\nnumeroRegistro: " + numeroRegistro +
-    " \nnombreRegistro " + nombreCompleto + "\nnumeroSS: " + numeroSS1;
+    let primerSplit = value.split(') -> ');
+    let direccion = primerSplit[1]
+    let segundoSplit = primerSplit[0];
+    let nombreYSS = segundoSplit.split(' (');
+    let nombre = nombreYSS[0];
+    let sS = nombreYSS[1];
+    let valueFinal = "\nnumeroRegistro: " + numeroRegistro + " \nnombreCompleto: " + nombre + "\nnumeroSS: " + sS+ "\ndireccion: " + direccion;
     registroPacientesV2.set(`Paciente ${cont}`, valueFinal);
     cont++;
 });

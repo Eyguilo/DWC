@@ -1,4 +1,5 @@
 <?php
+header("access-control-allow-origin: *");
 ini_set('html_errors', 1);
 ini_set('display_errors', 1);
 
@@ -14,6 +15,7 @@ while ($myrow = $result->fetch_assoc()) {
 }
 
 $nombre = $_REQUEST["nombre"];
+//$nombre = "as";
 $pista = "";
 
 if ($nombre !== "") {

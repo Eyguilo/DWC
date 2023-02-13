@@ -26,6 +26,8 @@
                 xmlhttp.onload = function () {
                     document.getElementById("txtHint").innerHTML = this.responseText;
                 }
+                console.log("php/city.php?nombre=" + nombre)
+
                 xmlhttp.open("GET", "php/city.php?nombre=" + nombre);
                 xmlhttp.send();
             }

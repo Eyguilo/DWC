@@ -6,33 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AJAX</title>
+    <script src="js/script.js"></script>
 </head>
 
 <body>
-    <p>Start typing a name in the input field below:</p>
-    <p>Suggestions: <span id="txtHint"></span></p>
+    <h1>Suggeriments</h1>
 
     <form>
-        First name: <input type="text" onkeyup="showHint(this.value)">
+        <label for="idTexto">Introdueix una ciutat: </label><br>
+        <input type="text" id="idTexto" onkeyup="showHint(this.value)">
     </form>
 
-    <script>
-        function showHint(nombre) {
-            if (nombre.length == 0) {
-                document.getElementById("txtHint").innerHTML = "";
-                return;
-            } else {
-                const xmlhttp = new XMLHttpRequest();
-                xmlhttp.onload = function () {
-                    document.getElementById("txtHint").innerHTML = this.responseText;
-                }
-                console.log("php/city.php?nombre=" + nombre)
-
-                xmlhttp.open("GET", "php/city.php?nombre=" + nombre);
-                xmlhttp.send();
-            }
-        }
-    </script>
+    <p><span id="txtPista"></span></p>
 </body>
 
 </html>

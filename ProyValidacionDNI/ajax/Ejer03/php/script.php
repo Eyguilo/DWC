@@ -8,7 +8,7 @@ $pista = "";
 
 $conexion = mysqli_connect('localhost', 'root', '1234');
 mysqli_select_db($conexion, 'world');
-$consulta = mysqli_prepare($conexion, "SELECT country.Name FROM country WHERE country.Name LIKE '".$nombre."%' ORDER BY country.Name ASC;");
+$consulta = mysqli_prepare($conexion, "SELECT country.Name FROM country;");
 $consulta->execute();
 $result = $consulta->get_result();
 
@@ -16,11 +16,11 @@ $arrayNombres = array();
 while ($myrow = $result->fetch_assoc()) {
     array_push($arrayNombres, $myrow);
 }
-$estructura = "";
+
+$estructura = "<option disabled selected></option>";
+$cont = 1;
 foreach($arrayNombres as $nom){
-    $estructura .= "
-                    <tr>
-                        <td>".$nom['Name']."</td>
-                    </tr>";
+    $estructura .="<option value='".$cont."'>".$nom['Name']."</option>";
+    $cont++;
 }
 echo $estructura;

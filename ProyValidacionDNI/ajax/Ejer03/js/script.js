@@ -8,7 +8,7 @@ function showHint(nombre) {
             document.getElementById("txtPista").innerHTML = this.responseText;
         }
 
-        let nombres = xmlhttp.open("GET", "php/script.php?nombre=" + nombre);        
-        xmlhttp.send(nombres);
+        xmlhttp.open("GET", "php/script.php?nombre=" + nombre);
+        xmlhttp.send();
     }
 }

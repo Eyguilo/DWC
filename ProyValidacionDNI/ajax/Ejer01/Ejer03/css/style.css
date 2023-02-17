@@ -1,0 +1,11 @@
+select{
+    width: 310px; 
+}
+#informacio{
+    width: 500px;
+    min-height: 20px;
+    border: 1px solid black;
+}
+h2{
+    text-align: center;
+}

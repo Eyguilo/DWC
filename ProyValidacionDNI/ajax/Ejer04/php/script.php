@@ -17,15 +17,8 @@ if ($nomPais == 'null' && $nomCiutat == 'null') {
     while ($myrow = $result->fetch_assoc()) {
         array_push($arrayNoms, $myrow);
     }
-    $estructura = "";
-    foreach ($arrayNoms as $nom) {
-        if ($estructura == "") {
-            $estructura = $nom['Name'];
-        } else {
-            $estructura .= ", " . $nom['Name'];
-        }
-    }
-    echo $estructura;
+    $nomPaisos = json_encode($arrayNoms);
+    echo $nomPaisos;
 
 } else if ($nomPais != 'null' && $nomCiutat == 'null') {
     $connexio = mysqli_connect('localhost', 'root', '1234');
@@ -62,7 +55,7 @@ if ($nomPais == 'null' && $nomCiutat == 'null') {
         array_push($arrayCiutat, $myrow);
     }
     $estructura = "";
-    $estructura = $arrayCiutat[0][0] . ", " . $arrayCiutat[0][1] . ", " . $arrayCiutat[0][2];
+    $estructura = $arrayCiutat[0][0]. ", " . $arrayCiutat[0][1]. ", " . $arrayCiutat[0][2];
 
     echo $estructura;
 }

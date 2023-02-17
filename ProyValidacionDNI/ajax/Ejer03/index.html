@@ -13,23 +13,16 @@
 <body>
     <h1>CIUTATS</h1>
 
-    <form>
-        <label for='idPais'>Selecciona una lletra: </label><br>
-        <select name='pais' id='idPais' onchange='showHint(value)'>
-            <?php
-                $query = $mysqli -> query ("SELECT * FROM paises");
-                while ($valores = mysqli_fetch_array($query)) {
-                echo "<option value='".$valores[id]."'>$valores[paises]</option>";
-                }
-            ?>
-        </select>
+    <form id="form1">
+        <label for="idPais">Tria un país:</label><br>
+        <select id="idPais" onclick="showHint()"></select>
     </form><br>
 
-    <table id='tabla'>
-        <tr>
-            <td><strong>PAÏSOS</strong></td>
-        </tr>        
-    </table>
+    <form id="form2">
+        <label for="idCiutat">Tria una ciutat:</label><br>
+        <select id="idCiutat" onclick="datosCiudad(this.value)"></select>
+    </form><br>
+
 </body>
 
 </html>

@@ -1,0 +1,11 @@
+#tabla{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+tr, td{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+select{
+    width: 310px; 
+}

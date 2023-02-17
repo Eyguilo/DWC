@@ -18,9 +18,10 @@ while ($myrow = $result->fetch_assoc()) {
 }
 $estructura = "";
 foreach($arrayNombres as $nom){
-    $estructura .= "
-                    <tr>
-                        <td>".$nom['Name']."</td>
-                    </tr>";
+    if($estructura == ""){
+        $estructura .= $nom['Name'];
+    }else{
+        $estructura .= ", ".$nom['Name'];
+    }
 }
 echo $estructura;

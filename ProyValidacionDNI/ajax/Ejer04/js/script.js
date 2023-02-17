@@ -11,8 +11,7 @@ function nomPaisos() {
         let sel = document.getElementById("idPais");
         form.appendChild(sel);
 
-        let arrayPaisos = this.responseText;
-        console.log(arrayPaisos);
+        let arrayPaisos = JSON.parse(this.responseText);
 
         let opt = document.createElement('option');
         opt.textContent = 'Elegeix un país';
@@ -20,12 +19,12 @@ function nomPaisos() {
         opt.disabled = true;
         sel.appendChild(opt);
 
-        for (let i = 0; i < array.length; i++) {
+        for (let i = 0; i < arrayPaisos.length; i++) {
             let opt = document.createElement('option');
-            opt.textContent = value;
-            opt.setAttribute('value', value);
+            opt.textContent = arrayPaisos[i]['Name'];
+            opt.setAttribute('value', arrayPaisos[i]['Name']);
             sel.appendChild(opt);
-            
+
         }
     }
     xmlhttp.open("GET", "php/script.php?nomPais=null&nomCiutat=null", true);
@@ -42,8 +41,8 @@ function dadesCiutat(pais) {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function () {
 
-        let arrayCiudades = "";
-        arrayCiudades = this.responseText.split(';');
+        let arrayCiutats = "";
+        arrayCiutats = JSON.parse(this.responseText);
 
         let opt = document.createElement('option');
         opt.textContent = 'Elegeix un ciutat:';
@@ -51,25 +50,13 @@ function dadesCiutat(pais) {
         opt.disabled = true;
         sel.appendChild(opt);
 
-        console.log(arrayCiudades);
-
-        let cont = 0;
-        arrayCiudades.forEach(nombre => {
-            if (cont < arrayCiudades.length - 1) {
-                let nomCiutat = nombre.split(', ')[0];
-                console.log(nomCiutat);
-                let opt = document.createElement('option');
-                opt.textContent = nomCiutat;
-                let codiCiutat = nombre.split(', ')[1];
-                console.log(codiCiutat);
-
-                opt.setAttribute('value', codiCiutat);
-                sel.appendChild(opt);
-                cont++;
-            }
-        });
+        for (let i = 0; i < arrayCiutats.length; i++) {
+            let opt = document.createElement('option');
+            opt.textContent = arrayCiutats[i]['Name'];
+            opt.setAttribute('value', arrayCiutats[i]['ID']);
+            sel.appendChild(opt);
+        }
     }
-
     xmlhttp.open("GET", "php/script.php?nomPais=" + pais + "&nomCiutat=null", true);
     xmlhttp.send();
 }
@@ -80,16 +67,16 @@ function dadesDistricte(ciutatCodi) {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function () {
 
-        ciutatDades = this.responseText.split(', ');
+        let ciutatDades = JSON.parse(this.responseText);
 
         let div = document.getElementById('informacio');
         div.innerHTML = "";
         let h2 = document.createElement('h2');
         let p1 = document.createElement('p');
-        p1.innerHTML = "Districte: <strong>" + ciutatDades[1] + "</strong>";
+        p1.innerHTML = "Districte: <strong>" + ciutatDades[0]['District'] + "</strong>";
         let p2 = document.createElement('p');
-        p2.innerHTML = "Districte: <strong>" + ciutatDades[2] + "</strong>";
-        h2.textContent = ciutatDades[0];
+        p2.innerHTML = "Districte: <strong>" + ciutatDades[0]['Population'] + "</strong>";
+        h2.textContent = ciutatDades[0]['Name'];
         div.appendChild(h2);
         div.appendChild(p1);
         div.appendChild(p2);

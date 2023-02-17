@@ -29,18 +29,11 @@ if ($nomPais == 'null' && $nomCiutat == 'null') {
     $result = $consulta->get_result();
 
     $arrayNoms = array();
-    while ($myrow = $result->fetch_row()) {
+    while ($myrow = $result->fetch_assoc()) {
         array_push($arrayNoms, $myrow);
     }
-    $estructura = "";
-    foreach ($arrayNoms as $nom) {
-        if ($estructura == "") {
-            $estructura = $nom[0] . ", " . $nom[1] . ";";
-        } else {
-            $estructura .= $nom[0] . ", " . $nom[1] . ";";
-        }
-    }
-    echo $estructura;
+
+    echo json_encode($arrayNoms);
 
 } else if ($nomPais == 'null' && $nomCiutat != 'null') {
     $connexio = mysqli_connect('localhost', 'root', '1234');
@@ -51,11 +44,9 @@ if ($nomPais == 'null' && $nomCiutat == 'null') {
     $result = $consulta->get_result();
 
     $arrayCiutat = array();
-    while ($myrow = $result->fetch_row()) {
+    while ($myrow = $result->fetch_assoc()) {
         array_push($arrayCiutat, $myrow);
     }
-    $estructura = "";
-    $estructura = $arrayCiutat[0][0]. ", " . $arrayCiutat[0][1]. ", " . $arrayCiutat[0][2];
 
-    echo $estructura;
+    echo json_encode($arrayCiutat);
 }
